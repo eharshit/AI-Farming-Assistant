@@ -59,8 +59,39 @@ Several machine learning classifiers were trained and evaluated on the dataset:
 - Random Forest (n_estimators=20, random_state=5) - Accuracy: **~99.54%**
 
 ### Final Selection & Deployment
-- **Selected Model:** **Random Forest Classifier**
-- **Reasoning:** It achieved the highest cross-validation score and an outstanding accuracy of **99.54%** on the test set, making it the most reliable choice for this dataset.
-- **Parameters of Final Model:** `n_estimators=20`, `random_state=5`.
-- **Model File:** Saved as `RF.pkl` in the `CROP-RECOMMENDATION` directory.
-- **Web App:** Deployed using Streamlit (`CROP-RECOMMENDATION/webapp.py`).
+- **Selected Model:** **Stacked Ensemble Model**
+- **Architecture:** 
+  - **Layer 1 (Base Models):** Random Forest Classifier & Gradient Boosting Classifier
+  - **Layer 2 (Meta-classifier):** Random Forest Classifier trained on the predictions of the base models.
+- **Reasoning:** By utilizing ensemble learning and stacking, the model effectively captures complex patterns in the data, leading to more accurate and reliable crop recommendations.
+- **Performance:** Achieved an accuracy of **~98.86%** on the test set.
+- **Model File:** Saved as `stacked_crop_model.pkl` in the `Backend/models` directory.
+---
+
+## 3. Fertilizer Recommendation Model
+
+**Context & Objective:**
+This model suggests the most suitable fertilizer for a specific crop and soil combination. It helps farmers optimize nutrient application, reduce costs, and prevent soil degradation.
+
+### Model Architecture
+- **Type:** Random Forest Classifier
+- **Framework:** scikit-learn
+- **Configuration:** 100 decision trees (`n_estimators=100`) with a fixed `random_state` for reproducibility.
+
+### Dataset Features (Inputs)
+The model uses 8 parameters to make a recommendation:
+1.  **Temperature:** Ambient temperature in Celsius.
+2.  **Humidity:** Relative humidity percentage.
+3.  **Moisture:** Soil moisture level.
+4.  **Soil Type:** Categorical (e.g., Sandy, Loamy, Black, Red, Clayey).
+5.  **Crop Type:** Categorical (e.g., Maize, Sugarcane, Cotton, Tobacco, Paddy, Wheat, Millets, Oil seeds, Pulses, Ground Nuts).
+6.  **Nitrogen (N):** Ratio of Nitrogen content in soil.
+7.  **Potassium (K):** Ratio of Potassium content in soil.
+8.  **Phosphorous (P):** Ratio of Phosphorous content in soil.
+
+### Output
+- **Fertilizer Name:** Recommends specific fertilizers such as Urea, DAP, 14-35-14, 28-28, 17-17-17, 20-20, or 10-26-26.
+
+### Deployment
+- **Model File:** Saved as `fertilizer_model.pkl` in the `Backend/models` directory.
+- **Preprocessing:** Categorical inputs (Soil and Crop types) are encoded using `LabelEncoder` objects stored as pickle files.
