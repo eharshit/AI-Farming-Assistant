@@ -51,7 +51,10 @@ try:
         crop_ensemble = pickle.load(f)
     print("Stacked Crop Ensemble loaded successfully.")
 except Exception as e:
+    import traceback
     print(f"Warning: Failed to load Stacked Crop Model: {e}. Will run in MOCK mode.")
+    print("Traceback details:")
+    traceback.print_exc()
     crop_ensemble = None
 
 # Fertilizer Models  
@@ -206,11 +209,11 @@ async def predict_crop(req: CropRequest):
             confidence = random.uniform(0.85, 0.98)
             random.seed() # reset
             return {
-                "recommended_crop": recommended_crop,
+                "recommended_crop": "MOCK: " + recommended_crop,
                 "recommendations": [
-                    {"crop": recommended_crop, "confidence": confidence},
-                    {"crop": "maize" if recommended_crop != "maize" else "rice", "confidence": 0.08},
-                    {"crop": "jute" if recommended_crop != "jute" else "cotton", "confidence": 0.05}
+                    {"crop": "MOCK: " + recommended_crop, "confidence": confidence},
+                    {"crop": "maize", "confidence": 0.08},
+                    {"crop": "jute", "confidence": 0.05}
                 ],
                 "confidence": confidence,
                 "analysis": [
@@ -236,6 +239,9 @@ async def predict_crop(req: CropRequest):
 
         base_model_for_importance = None
         top_recommendations = []
+
+        is_sklearn_stack = crop_ensemble.get('is_sklearn_stack', False)
+        le = crop_ensemble.get('label_encoder', None)
 
         if is_sklearn_stack:
             scaler = crop_ensemble['scaler']
@@ -360,8 +366,7 @@ async def predict_disease(file: UploadFile = File(...)):
                 "confidence": chosen_conf
             }
 
-        image = Image.open(BytesIO(contents)).convert("RGB")
-        image = image.resize((128, 128))
+        image = tf.keras.preprocessing.image.load_img(BytesIO(contents), target_size=(128, 128))
         
         input_arr = tf.keras.preprocessing.image.img_to_array(image)
         input_arr = np.array([input_arr])  # Create batch
