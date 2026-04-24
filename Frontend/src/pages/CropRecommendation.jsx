@@ -111,8 +111,8 @@ const CropRecommendation = () => {
         try {
             await updateFarmStatus({
                 crop_name: result,
-                status: "Growing",
-                next_step: "Monitor soil moisture"
+                status: "Soil Preparation",
+                next_step: "Prepare land, clear weeds, and plow."
             });
             navigate('/dashboard');
         } catch (err) {

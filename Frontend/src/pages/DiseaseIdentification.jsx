@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { predictDisease } from '../services/api';
-import { Bug, Upload, Loader2, AlertCircle } from 'lucide-react';
+import { Bug, Upload, Loader2, AlertCircle, CheckCircle, Leaf } from 'lucide-react';
 
 const DiseaseIdentification = () => {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -97,6 +97,43 @@ const DiseaseIdentification = () => {
                         <div style={{ display: 'inline-block', padding: '5px 15px', background: 'var(--primary-color)', color: 'white', borderRadius: '50px', fontWeight: '600' }}>
                             Confidence: {(result.confidence * 100).toFixed(2)}%
                         </div>
+                        
+                        {result.suggestions && result.suggestions.length > 0 && (
+                            <div style={{ marginTop: '25px', textAlign: 'left', background: 'white', padding: '25px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
+                                <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary-dark)', marginBottom: '15px', fontSize: '1.2rem' }}>
+                                    {result.disease_class.includes('healthy') ? <Leaf size={20} /> : <CheckCircle size={20} />}
+                                    {result.disease_class.includes('healthy') ? 'Maintenance Plan' : 'Actionable Treatment Plan'}
+                                </h4>
+                                <ul style={{ padding: 0, margin: 0 }}>
+                                    {result.suggestions.map((suggestion, idx) => (
+                                        <li key={idx} style={{ 
+                                            display: 'flex', 
+                                            alignItems: 'flex-start', 
+                                            gap: '10px', 
+                                            marginBottom: '12px',
+                                            color: 'var(--text-dark)',
+                                            lineHeight: '1.5'
+                                        }}>
+                                            <div style={{ 
+                                                minWidth: '24px', 
+                                                height: '24px', 
+                                                borderRadius: '50%', 
+                                                background: 'rgba(76, 175, 80, 0.1)', 
+                                                display: 'flex', 
+                                                alignItems: 'center', 
+                                                justifyContent: 'center',
+                                                color: 'var(--primary-color)',
+                                                fontWeight: 'bold',
+                                                fontSize: '0.9rem'
+                                            }}>
+                                                {idx + 1}
+                                            </div>
+                                            {suggestion}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                     </div>
                 )}
 

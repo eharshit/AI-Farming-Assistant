@@ -103,6 +103,200 @@ DISEASE_CLASSES = [
     'Tomato___healthy'
 ]
 
+# Disease Treatments
+DISEASE_TREATMENTS = {
+    "Apple___Apple_scab": [
+        "Remove and destroy infected fallen leaves to reduce fungal spores.",
+        "Apply fungicides containing captan or myclobutanil during early spring.",
+        "Ensure proper tree spacing to improve air circulation."
+    ],
+    "Apple___Black_rot": [
+        "Prune out dead or diseased branches and destroy them.",
+        "Remove mummified fruits from the tree and the ground.",
+        "Apply a protective fungicide spray program starting at bud break."
+    ],
+    "Apple___Cedar_apple_rust": [
+        "Remove nearby cedar or juniper trees that serve as alternate hosts.",
+        "Apply preventative fungicides (like myclobutanil) just before apple blossoms open.",
+        "Plant rust-resistant apple varieties if possible."
+    ],
+    "Apple___healthy": [
+        "Maintain regular watering and fertilization schedules.",
+        "Prune annually to maintain good air circulation and light penetration.",
+        "Monitor for early signs of pests or disease."
+    ],
+    "Blueberry___healthy": [
+        "Maintain acidic soil pH (4.5-5.5) using sulfur or acidic fertilizers.",
+        "Ensure consistent moisture but avoid waterlogging.",
+        "Prune old, woody canes to encourage new growth and better air flow."
+    ],
+    "Cherry_(including_sour)___Powdery_mildew": [
+        "Apply sulfur or potassium bicarbonate-based fungicides early in the season.",
+        "Prune trees to open the canopy and reduce humidity.",
+        "Avoid excessive nitrogen fertilization which promotes susceptible new growth."
+    ],
+    "Cherry_(including_sour)___healthy": [
+        "Provide consistent watering, especially during fruit development.",
+        "Apply balanced fertilizer in early spring.",
+        "Monitor for common pests like cherry fruit flies."
+    ],
+    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": [
+        "Practice crop rotation to reduce fungal inoculum in the soil.",
+        "Use resistant corn hybrids for future plantings.",
+        "Apply appropriate foliar fungicides if lesions appear before silking."
+    ],
+    "Corn_(maize)___Common_rust_": [
+        "Plant rust-resistant corn varieties.",
+        "Apply fungicides if rust appears early and conditions are highly humid.",
+        "Ensure adequate spacing for air circulation to keep leaves dry."
+    ],
+    "Corn_(maize)___Northern_Leaf_Blight": [
+        "Plow under infected crop residue after harvest.",
+        "Plant resistant hybrids.",
+        "Apply fungicides early if the disease is detected prior to tasseling."
+    ],
+    "Corn_(maize)___healthy": [
+        "Maintain optimal soil nitrogen levels for healthy growth.",
+        "Ensure consistent irrigation, especially during the silking stage.",
+        "Keep the field free of competing weeds."
+    ],
+    "Grape___Black_rot": [
+        "Remove and destroy all mummified grapes and infected canes.",
+        "Apply a rigorous fungicide program from early spring through mid-summer.",
+        "Ensure good canopy management to promote rapid drying of leaves."
+    ],
+    "Grape___Esca_(Black_Measles)": [
+        "Prune out infected wood well below the symptomatic area.",
+        "Avoid making large pruning wounds during wet weather.",
+        "Apply wound protectants to pruning cuts."
+    ],
+    "Grape___Leaf_blight_(Isariopsis_Leaf_Spot)": [
+        "Apply protective fungicides, especially during wet seasons.",
+        "Improve air circulation by thinning the canopy.",
+        "Remove and destroy fallen leaves in autumn."
+    ],
+    "Grape___healthy": [
+        "Maintain proper vine training and canopy management.",
+        "Apply preventative dormant sprays in late winter.",
+        "Monitor soil moisture and nutrient levels regularly."
+    ],
+    "Orange___Haunglongbing_(Citrus_greening)": [
+        "This is a severe bacterial disease; infected trees must be removed and destroyed.",
+        "Control the Asian citrus psyllid insect vector using appropriate insecticides.",
+        "Use certified disease-free nursery stock for new plantings."
+    ],
+    "Peach___Bacterial_spot": [
+        "Plant resistant peach varieties.",
+        "Apply copper-based bactericides during the dormant season.",
+        "Maintain tree vigor through proper fertilization and watering."
+    ],
+    "Peach___healthy": [
+        "Prune annually in late winter to maintain an open center shape.",
+        "Apply dormant sprays to prevent overwintering pests and diseases.",
+        "Thin fruits to prevent branch breakage and improve fruit quality."
+    ],
+    "Pepper,_bell___Bacterial_spot": [
+        "Use disease-free seeds and transplants.",
+        "Avoid overhead watering; use drip irrigation instead.",
+        "Apply copper-based sprays early as a preventative measure."
+    ],
+    "Pepper,_bell___healthy": [
+        "Maintain consistent soil moisture to prevent blossom end rot.",
+        "Fertilize regularly with a balanced nutrient mix.",
+        "Stake plants to provide support as fruit develops."
+    ],
+    "Potato___Early_blight": [
+        "Apply preventative fungicides starting before symptoms appear.",
+        "Practice a 3-4 year crop rotation away from solanaceous crops.",
+        "Ensure plants have adequate nitrogen to delay senescence."
+    ],
+    "Potato___Late_blight": [
+        "Apply protective fungicides containing chlorothalonil or copper immediately.",
+        "Destroy infected plant material; do not compost it.",
+        "Avoid overhead irrigation and ensure good soil drainage."
+    ],
+    "Potato___healthy": [
+        "Hill soil around the base of the plants to protect developing tubers.",
+        "Maintain even soil moisture throughout the growing season.",
+        "Monitor for pests like the Colorado potato beetle."
+    ],
+    "Raspberry___healthy": [
+        "Prune out dead canes immediately after harvesting.",
+        "Keep the planting area free of weeds.",
+        "Ensure adequate watering, especially during dry spells."
+    ],
+    "Soybean___healthy": [
+        "Ensure seeds are properly inoculated with rhizobia bacteria.",
+        "Monitor for common pests like soybean aphids.",
+        "Maintain good weed control early in the season."
+    ],
+    "Squash___Powdery_mildew": [
+        "Apply fungicides like sulfur or potassium bicarbonate at the first sign of disease.",
+        "Plant resistant or tolerant squash varieties.",
+        "Improve air circulation by spacing plants appropriately."
+    ],
+    "Strawberry___Leaf_scorch": [
+        "Remove and destroy infected leaves.",
+        "Ensure plants are spaced properly to allow for air circulation.",
+        "Apply preventative fungicides if the disease is a recurring problem."
+    ],
+    "Strawberry___healthy": [
+        "Renew plantings every 3-4 years to maintain vigor.",
+        "Mulch with straw to keep fruit off the soil and retain moisture.",
+        "Provide consistent watering, especially during fruit set."
+    ],
+    "Tomato___Bacterial_spot": [
+        "Avoid working in the garden when foliage is wet.",
+        "Use drip irrigation to keep leaves dry.",
+        "Apply copper-based bactericides at the first sign of symptoms."
+    ],
+    "Tomato___Early_blight": [
+        "Remove lower leaves as they begin to yellow to reduce soil splash.",
+        "Mulch around the base of the plant.",
+        "Apply fungicides containing chlorothalonil or mancozeb."
+    ],
+    "Tomato___Late_blight": [
+        "Remove and destroy infected plants immediately.",
+        "Apply protective fungicides proactively during wet, cool weather.",
+        "Avoid overhead watering."
+    ],
+    "Tomato___Leaf_Mold": [
+        "Improve air circulation by pruning and staking plants.",
+        "Avoid wetting the foliage when watering.",
+        "Apply appropriate fungicides at the first sign of the disease."
+    ],
+    "Tomato___Septoria_leaf_spot": [
+        "Remove infected lower leaves promptly.",
+        "Mulch to prevent soilborne spores from splashing onto leaves.",
+        "Apply protective fungicides regularly."
+    ],
+    "Tomato___Spider_mites Two-spotted_spider_mite": [
+        "Wash mites off leaves with a strong stream of water.",
+        "Apply horticultural oils or insecticidal soaps.",
+        "Introduce natural predators like ladybugs or predatory mites."
+    ],
+    "Tomato___Target_Spot": [
+        "Ensure excellent air circulation around plants.",
+        "Avoid overhead irrigation.",
+        "Apply broad-spectrum fungicides as a preventative measure."
+    ],
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": [
+        "Control whitefly populations, which vector the virus.",
+        "Remove and destroy infected plants immediately to prevent spread.",
+        "Plant resistant tomato varieties."
+    ],
+    "Tomato___Tomato_mosaic_virus": [
+        "Wash hands thoroughly after handling tobacco products before touching plants.",
+        "Disinfect tools and stakes between uses.",
+        "Remove and destroy infected plants; do not compost them."
+    ],
+    "Tomato___healthy": [
+        "Provide sturdy supports (cages or stakes).",
+        "Water consistently at the base of the plant.",
+        "Prune suckers to improve air flow and fruit size."
+    ]
+}
+
 # Mock crop classes
 MOCK_CROPS = ['rice', 'maize', 'chickpea', 'kidneybeans', 'pigeonpeas', 'mothbeans', 'mungbean', 'blackgram', 'lentil', 'pomegranate', 'banana', 'mango', 'grapes', 'watermelon', 'muskmelon', 'apple', 'orange', 'papaya', 'coconut', 'cotton', 'jute', 'coffee']
 
@@ -363,7 +557,8 @@ async def predict_disease(file: UploadFile = File(...)):
             random.seed() # reset the global seed
             return {
                 "disease_class": chosen_disease, 
-                "confidence": chosen_conf
+                "confidence": chosen_conf,
+                "suggestions": DISEASE_TREATMENTS.get(chosen_disease, [])
             }
 
         image = tf.keras.preprocessing.image.load_img(BytesIO(contents), target_size=(128, 128))
@@ -376,7 +571,11 @@ async def predict_disease(file: UploadFile = File(...)):
         predictions = disease_model.predict(input_arr)
         result_index = np.argmax(predictions)
         
-        res = {"disease_class": DISEASE_CLASSES[result_index], "confidence": float(predictions[0][result_index])}
+        res = {
+            "disease_class": DISEASE_CLASSES[result_index], 
+            "confidence": float(predictions[0][result_index]),
+            "suggestions": DISEASE_TREATMENTS.get(DISEASE_CLASSES[result_index], [])
+        }
         await log_recommendation("Disease", res["disease_class"], {"filename": file.filename})
         return res
     except Exception as e:

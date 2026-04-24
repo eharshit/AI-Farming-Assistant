@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { getFarmStatus, getRecommendationHistory, resetFarmStatus } from '../services/api';
-import { LayoutDashboard, Sprout, Calendar, ArrowRight, Trash2, History, AlertCircle } from 'lucide-react';
+import { getFarmStatus, getRecommendationHistory, resetFarmStatus, updateFarmStatus } from '../services/api';
+import { LayoutDashboard, Sprout, Calendar, ArrowRight, Trash2, History, AlertCircle, ArrowUpCircle } from 'lucide-react';
 import './Dashboard.css';
+
+const FARMING_STAGES = [
+    { label: 'Soil Preparation', action: 'Prepare land, clear weeds, and plow.', link: null, linkText: null },
+    { label: 'Sowing & Planting', action: 'Plant seeds/saplings based on AI recommendations.', link: '/recommend-crop', linkText: '🌱 Get Crop Recommendation' },
+    { label: 'Watering & Growth', action: 'Maintain regular irrigation and monitor.', link: '/weather', linkText: '🌦️ Check Weather Forecast' },
+    { label: 'Fertilizer Application', action: 'Apply recommended nutrients.', link: '/recommend-fertilizer', linkText: '🧪 Get Fertilizer Plan' },
+    { label: 'Harvesting', action: 'Collect mature crops.', link: '/identify-disease', linkText: '🔍 Scan for Post-Harvest Diseases' },
+    { label: 'Market & Selling', action: 'Sell produce to market.', link: null, linkText: null }
+];
 
 const Dashboard = () => {
     const [status, setStatus] = useState(null);
@@ -46,6 +55,43 @@ const Dashboard = () => {
         const today = new Date();
         const diffTime = Math.abs(today - start);
         return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    };
+
+    const handleAdvanceStage = async () => {
+        if (!status) return;
+        
+        // Find current stage index based on status.status string
+        let currentIndex = FARMING_STAGES.findIndex(stage => stage.label === status.status);
+        if (currentIndex === -1) currentIndex = 0; // Default to first stage if unknown
+        
+        if (currentIndex < FARMING_STAGES.length - 1) {
+            const nextStage = FARMING_STAGES[currentIndex + 1];
+            try {
+                await updateFarmStatus({
+                    crop_name: status.crop_name,
+                    date_planted: status.date_planted,
+                    status: nextStage.label,
+                    next_step: nextStage.action
+                });
+                // Refresh data
+                fetchData();
+            } catch (err) {
+                alert("Failed to advance stage");
+            }
+        } else {
+            alert("Crop has already reached the final stage!");
+        }
+    };
+
+    const getCurrentStageIndex = () => {
+        if (!status) return 0;
+        const index = FARMING_STAGES.findIndex(stage => stage.label === status.status);
+        return index !== -1 ? index : 0;
+    };
+
+    const getProgressPercentage = () => {
+        const index = getCurrentStageIndex();
+        return Math.round((index / (FARMING_STAGES.length - 1)) * 100);
     };
 
     if (loading) return (
@@ -94,12 +140,30 @@ const Dashboard = () => {
                             </div>
                             <div className="progress-container">
                                 <div className="progress-label">
-                                    <span>Growth Progress</span>
-                                    <span>35%</span>
+                                    <span>Stage {getCurrentStageIndex() + 1}: {FARMING_STAGES[getCurrentStageIndex()].label}</span>
+                                    <span>{getProgressPercentage()}%</span>
                                 </div>
-                                <div className="progress-bar">
-                                    <div className="progress-fill" style={{ width: '35%' }}></div>
+                                <div className="progress-bar" style={{ marginBottom: '15px' }}>
+                                    <div className="progress-fill" style={{ width: `${getProgressPercentage()}%` }}></div>
                                 </div>
+                                
+                                {getCurrentStageIndex() < FARMING_STAGES.length - 1 && (
+                                    <button onClick={handleAdvanceStage} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                                        <ArrowUpCircle size={18} /> Advance to Next Stage
+                                    </button>
+                                )}
+                                
+                                {FARMING_STAGES[getCurrentStageIndex()].link && (
+                                    <a href={FARMING_STAGES[getCurrentStageIndex()].link} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}>
+                                        {FARMING_STAGES[getCurrentStageIndex()].linkText}
+                                    </a>
+                                )}
+                                
+                                {getCurrentStageIndex() === FARMING_STAGES.length - 1 && (
+                                    <div style={{ textAlign: 'center', padding: '10px', background: 'rgba(76, 175, 80, 0.1)', color: 'var(--primary-dark)', borderRadius: '8px', fontWeight: 'bold' }}>
+                                        Cycle Complete! Ready for the next season.
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ) : (
@@ -142,18 +206,61 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                {/* History List */}
+                {/* Fertilizers Used Card */}
+                <div className="glass-panel history-card" style={{ gridColumn: 'span 1' }}>
+                    <div className="card-header">
+                        <h2><History size={20} /> Fertilizers Recommended</h2>
+                    </div>
+                    {history.filter(i => i.type.toLowerCase() === 'fertilizer').length > 0 ? (
+                        <div className="history-list">
+                            {history.filter(i => i.type.toLowerCase() === 'fertilizer').slice(0, 5).map((item) => (
+                                <div key={item.id} className="history-item">
+                                    <div className="type-dot fertilizer"></div>
+                                    <div className="history-info">
+                                        <span className="history-result" style={{ fontSize: '1.1rem' }}>{item.result}</span>
+                                    </div>
+                                    <span className="history-time">{item.timestamp}</span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-muted" style={{ textAlign: 'center', padding: '20px' }}>No fertilizer history yet.</p>
+                    )}
+                </div>
+
+                {/* Diseases Identified Card */}
+                <div className="glass-panel history-card" style={{ gridColumn: 'span 1' }}>
+                    <div className="card-header">
+                        <h2><History size={20} /> Diseases Identified</h2>
+                    </div>
+                    {history.filter(i => i.type.toLowerCase() === 'disease').length > 0 ? (
+                        <div className="history-list">
+                            {history.filter(i => i.type.toLowerCase() === 'disease').slice(0, 5).map((item) => (
+                                <div key={item.id} className="history-item">
+                                    <div className="type-dot disease"></div>
+                                    <div className="history-info">
+                                        <span className="history-result" style={{ fontSize: '1.1rem' }}>{item.result.replace(/___/g, " - ").replace(/_/g, " ")}</span>
+                                    </div>
+                                    <span className="history-time">{item.timestamp}</span>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-muted" style={{ textAlign: 'center', padding: '20px' }}>No disease history yet.</p>
+                    )}
+                </div>
+
+                {/* General History List (Crops) */}
                 <div className="glass-panel history-card" style={{ gridColumn: 'span 2' }}>
                     <div className="card-header">
-                        <h2><History size={20} /> Recent AI Insights</h2>
+                        <h2><History size={20} /> Crop Recommendations</h2>
                     </div>
-                    {history.length > 0 ? (
+                    {history.filter(i => i.type.toLowerCase() === 'crop').length > 0 ? (
                         <div className="history-list">
-                            {history.map((item) => (
+                            {history.filter(i => i.type.toLowerCase() === 'crop').map((item) => (
                                 <div key={item.id} className="history-item">
-                                    <div className={`type-dot ${item.type.toLowerCase()}`}></div>
+                                    <div className="type-dot crop"></div>
                                     <div className="history-info">
-                                        <span className="history-type">{item.type} Recommendation</span>
                                         <span className="history-result">{item.result}</span>
                                     </div>
                                     <span className="history-time">{item.timestamp}</span>
@@ -161,7 +268,7 @@ const Dashboard = () => {
                             ))}
                         </div>
                     ) : (
-                        <p className="text-muted" style={{ textAlign: 'center', padding: '20px' }}>No history available yet.</p>
+                        <p className="text-muted" style={{ textAlign: 'center', padding: '20px' }}>No crop recommendation history available yet.</p>
                     )}
                 </div>
             </div>
