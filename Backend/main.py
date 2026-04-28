@@ -84,6 +84,21 @@ except Exception as e:
     print(f"Warning: Failed to load Disease Model: {e}")
     disease_model = None
 
+# Price Prediction Models
+price_model_path = os.path.join(MODEL_DIR, "price_model.pkl")
+price_encoders_path = os.path.join(MODEL_DIR, "price_encoders.pkl")
+
+try:
+    with open(price_model_path, 'rb') as f:
+        price_model = pickle.load(f)
+    with open(price_encoders_path, 'rb') as f:
+        price_encoders = pickle.load(f)
+    print("Price Prediction Model loaded successfully.")
+except Exception as e:
+    print(f"Warning: Failed to load Price Prediction Model: {e}. Will run in MOCK mode.")
+    price_model = None
+    price_encoders = None
+
 
 # Disease Classes
 DISEASE_CLASSES = [
@@ -309,6 +324,12 @@ class CropRequest(BaseModel):
     ph: float
     rainfall: float
 
+class PriceRequest(BaseModel):
+    commodity_name: str
+    state: str
+    district: str
+    market: str
+
 class FertilizerRequest(BaseModel):
     temperature: float
     humidity: float
@@ -322,6 +343,61 @@ class FertilizerRequest(BaseModel):
 @app.get("/")
 def read_root():
     return {"message": "Welcome to AgriSens API"}
+
+@app.post("/api/predict/price")
+async def predict_price(req: PriceRequest):
+    import datetime
+    
+    current_month = datetime.datetime.now().month
+    current_year = datetime.datetime.now().year
+    
+    results = []
+    
+    # Generate predictions for the next 6 months
+    for i in range(6):
+        target_month = (current_month + i - 1) % 12 + 1
+        target_year = current_year + ((current_month + i - 1) // 12)
+        month_label = datetime.date(target_year, target_month, 1).strftime('%b %Y')
+        
+        if price_model is None or price_encoders is None:
+            # Mock mode: stable random walk based on hash of commodity
+            import hashlib
+            base_seed = int(hashlib.md5(req.commodity_name.encode()).hexdigest(), 16)
+            random.seed(base_seed + target_month)
+            price = round(random.uniform(2000, 8000), 2)
+            results.append({"month": month_label, "price": price})
+            continue
+            
+        try:
+            # Prepare inputs
+            # Format: 'commodity_name', 'state', 'district', 'market', 'month'
+            input_dict = {
+                'commodity_name': req.commodity_name,
+                'state': req.state,
+                'district': req.district,
+                'market': req.market
+            }
+            
+            encoded_input = []
+            for col in ['commodity_name', 'state', 'district', 'market']:
+                enc = price_encoders[col]
+                # Fallback to 'Unknown' if the class was not seen in training
+                val = input_dict[col]
+                if val not in enc.classes_:
+                    val = 'Unknown'
+                encoded_input.append(enc.transform([val])[0])
+                
+            encoded_input.append(target_month) # month feature
+            
+            # Predict
+            pred = price_model.predict([encoded_input])[0]
+            results.append({"month": month_label, "price": round(float(pred), 2)})
+            
+        except Exception as e:
+            # Fallback if specific prediction fails
+            results.append({"month": month_label, "price": 0})
+            
+    return {"commodity": req.commodity_name, "predictions": results}
 
 def get_crop_insights(crop, features, feature_names, base_model=None):
     # features: [N, P, K, temp, hum, ph, rain]
