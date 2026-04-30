@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sprout, TestTube, CloudSun, BookOpen, Bug } from 'lucide-react';
+import { Sprout, TestTube, CloudSun, BookOpen, Bug, TrendingUp } from 'lucide-react';
 
 const featureList = [
     {
@@ -20,6 +20,12 @@ const featureList = [
         description: 'Get tailored fertilizer suggestions based on soil quality to boost yield.',
         icon: <TestTube size={32} color="var(--primary-color)" />,
         path: '/recommend-fertilizer'
+    },
+    {
+        title: 'Price Prediction',
+        description: 'Forecast commodity market prices for the next 6 months using ML models.',
+        icon: <TrendingUp size={32} color="var(--primary-color)" />,
+        path: '/predict-price'
     },
     {
         title: 'Weather Forecast',

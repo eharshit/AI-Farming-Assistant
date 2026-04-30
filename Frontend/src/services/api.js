@@ -36,6 +36,15 @@ export const predictFertilizer = async (data) => {
     }
 };
 
+export const predictPrice = async (data) => {
+    try {
+        const response = await axios.post(`${API_BASE_URL}/predict/price`, data);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { detail: "Network error connecting to AI Server" };
+    }
+};
+
 // --- Farm Management & Dashboard API ---
 
 export const getFarmStatus = async () => {
