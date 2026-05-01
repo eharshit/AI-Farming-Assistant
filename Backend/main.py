@@ -790,3 +790,66 @@ async def predict_crop_v2(req: CropRequest):
     res = await predict_crop(req)
     # log_recommendation is already called inside predict_crop
     return res
+
+
+# ---------------------------------------------------------------------------
+# Chatbot Endpoint (additive — does not modify any existing code above)
+# ---------------------------------------------------------------------------
+from typing import Optional, List as TypingList
+
+class ChatMessageItem(BaseModel):
+    role: str  # "user" or "assistant"
+    content: str
+
+class ChatRequest(BaseModel):
+    message: str
+    history: TypingList[ChatMessageItem] = []
+    image: Optional[str] = None  # Optional base64-encoded image
+
+class ChatResponse(BaseModel):
+    reply: str
+    sources: list = []
+    suggested_actions: list = []
+
+@app.post("/api/chat", response_model=ChatResponse)
+async def chat(req: ChatRequest):
+    """
+    Unified conversational interface over all AgriSens ML endpoints.
+    Accepts a user message, optional conversation history, and optional image.
+    Returns a natural-language reply with sources and suggested next actions.
+    """
+    from services.chat_service import process_chat
+
+    history_dicts = [{"role": m.role, "content": m.content} for m in req.history]
+    result = await process_chat(
+        message=req.message,
+        history=history_dicts,
+        image_data=req.image,
+    )
+    return result
+
+@app.post("/api/chat/stream")
+async def chat_stream(req: ChatRequest):
+    """
+    Streaming version of the chat endpoint.
+    Returns Server-Sent Events (SSE) with word-by-word token delivery.
+    """
+    from services.chat_service import process_chat_stream
+    from starlette.responses import StreamingResponse
+
+    history_dicts = [{"role": m.role, "content": m.content} for m in req.history]
+
+    return StreamingResponse(
+        process_chat_stream(
+            message=req.message,
+            history=history_dicts,
+            image_data=req.image,
+        ),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+

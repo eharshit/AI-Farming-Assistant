@@ -21,3 +21,7 @@ tensorflow
 jupyter
 matplotlib
 seaborn
+
+# --- Chatbot (Gemini LLM) ---
+google-generativeai
+python-dotenv
