@@ -95,3 +95,46 @@ The model uses 8 parameters to make a recommendation:
 ### Deployment
 - **Model File:** Saved as `fertilizer_model.pkl` in the `Backend/models` directory.
 - **Preprocessing:** Categorical inputs (Soil and Crop types) are encoded using `LabelEncoder` objects stored as pickle files.
+
+---
+
+## 4. Price Prediction Model
+
+**Context & Objective:**
+This model forecasts commodity market prices based on historical APMC (Agricultural Produce Market Committee) data. It helps farmers make informed selling decisions by predicting modal prices for the next 6 months for a given commodity in a specific market.
+
+### Model Architecture
+- **Type:** Random Forest Regressor
+- **Framework:** scikit-learn
+- **Configuration:** 100 decision trees (`n_estimators=100`), `max_depth=15`, with parallel training (`n_jobs=-1`) and a fixed `random_state=42` for reproducibility.
+
+### Dataset
+- **Source:** Historical APMC market price data across India.
+- **Size:** ~836,977 records covering 249 commodities across 30 states.
+- **Time Range:** Multi-year data with daily price records.
+
+### Features (Inputs)
+The model uses 5 parameters to predict the modal price:
+1. **Commodity Name:** Name of the agricultural commodity (e.g., Onion, Wheat, Tomato).
+2. **State:** Indian state where the market is located.
+3. **District:** District of the market.
+4. **Market:** Specific APMC market name.
+5. **Month:** Target month for price prediction (extracted from date).
+
+### Target Variable
+- **Modal Price (₹ per Quintal):** The most frequent trading price recorded in the market.
+
+### Preprocessing
+- Categorical features (commodity_name, state, district, market) are encoded using `LabelEncoder` objects.
+- An 'Unknown' class is added to each encoder to gracefully handle unseen categories during inference.
+- Encoders are saved separately as `price_encoders.pkl`.
+
+### Performance
+- **R² Score:** ~0.8688 on the test set (80-20 split).
+
+### Deployment
+- **Model File:** Saved as `price_model.pkl` in the `Backend/models` directory.
+- **Encoders File:** Saved as `price_encoders.pkl` in the `Backend/models` directory.
+- **API Endpoint:** `POST /api/predict/price` — returns 6-month price forecasts starting from the current month.
+- **Training Script:** `ML_Training/PRICE-PREDICTION/train_price_model.py`
+
