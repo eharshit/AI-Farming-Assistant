@@ -12,6 +12,7 @@ import AboutUs from './pages/AboutUs';
 import Dashboard from './pages/Dashboard';
 import PricePrediction from './pages/PricePrediction';
 import AboutSection from './components/AboutSection';
+import ChatWidget from './components/ChatWidget';
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </main>
+
+        <ChatWidget />
 
         <footer style={{ background: 'var(--primary-dark)', color: 'white', padding: '40px 20px', textAlign: 'center', marginTop: '60px' }}>
           <div className="container">
