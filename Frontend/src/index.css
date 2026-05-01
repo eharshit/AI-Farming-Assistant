@@ -21,6 +21,22 @@
   --transition: all 0.3s ease;
 }
 
+[data-theme='dark'] {
+  --primary-color: #4caf50;
+  --primary-light: #80e27e;
+  --primary-dark: #087f23;
+  --bg-light: #121212;
+  --bg-white: #1e1e1e;
+  --text-dark: #e0e0e0;
+  --text-light: #9e9e9e;
+  /* Keep --text-white as is for button text */
+}
+
+[data-theme='dark'] .glass-panel {
+  background: rgba(30, 30, 30, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -219,6 +235,14 @@ h4 {
   background: radial-gradient(circle, rgba(96, 173, 94, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
   border-radius: 50%;
   z-index: 0;
+}
+
+[data-theme='dark'] .hero-section {
+  background: linear-gradient(to right bottom, var(--bg-light), var(--bg-white));
+}
+
+[data-theme='dark'] .hero-section::before {
+  background: radial-gradient(circle, rgba(96, 173, 94, 0.1) 0%, rgba(18, 18, 18, 0) 70%);
 }
 
 .hero-content {

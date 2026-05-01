@@ -9,7 +9,7 @@ const FARMING_STAGES = [
     { label: 'Watering & Growth', action: 'Maintain regular irrigation and monitor.', link: '/weather', linkText: '🌦️ Check Weather Forecast' },
     { label: 'Fertilizer Application', action: 'Apply recommended nutrients.', link: '/recommend-fertilizer', linkText: '🧪 Get Fertilizer Plan' },
     { label: 'Harvesting', action: 'Collect mature crops.', link: '/identify-disease', linkText: '🔍 Scan for Post-Harvest Diseases' },
-    { label: 'Market & Selling', action: 'Sell produce to market.', link: null, linkText: null }
+    { label: 'Market & Selling', action: 'Check market prices and sell produce.', link: '/predict-price', linkText: '📈 Predict Market Prices' }
 ];
 
 const Dashboard = () => {
@@ -47,6 +47,20 @@ const Dashboard = () => {
             } catch (err) {
                 alert("Failed to reset");
             }
+        }
+    };
+
+    const handleStartSeason = async () => {
+        try {
+            await updateFarmStatus({
+                crop_name: "Preparing Field",
+                date_planted: new Date().toISOString().split('T')[0],
+                status: "Soil Preparation",
+                next_step: "Prepare land, clear weeds, and plow."
+            });
+            fetchData();
+        } catch (err) {
+            alert("Failed to start season");
         }
     };
 
@@ -138,39 +152,51 @@ const Dashboard = () => {
                                     <span><strong>Next Step:</strong> {status.next_step}</span>
                                 </div>
                             </div>
-                            <div className="progress-container">
-                                <div className="progress-label">
-                                    <span>Stage {getCurrentStageIndex() + 1}: {FARMING_STAGES[getCurrentStageIndex()].label}</span>
-                                    <span>{getProgressPercentage()}%</span>
+                            <div className="tracker-container" style={{ margin: '30px 0 20px 0' }}>
+                                <div className="tracker-stepper">
+                                    {FARMING_STAGES.map((stage, idx) => {
+                                        const currentIndex = getCurrentStageIndex();
+                                        const isCompleted = idx < currentIndex;
+                                        const isActive = idx === currentIndex;
+
+                                        return (
+                                            <div key={idx} className={`tracker-step ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}`}>
+                                                <div className="tracker-circle">
+                                                    {isCompleted ? '✓' : idx + 1}
+                                                </div>
+                                                <div className="tracker-label">{stage.label}</div>
+                                                {idx < FARMING_STAGES.length - 1 && <div className="tracker-line"></div>}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
-                                <div className="progress-bar" style={{ marginBottom: '15px' }}>
-                                    <div className="progress-fill" style={{ width: `${getProgressPercentage()}%` }}></div>
+
+                                <div className="tracker-actions" style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                    {getCurrentStageIndex() < FARMING_STAGES.length - 1 && (
+                                        <button onClick={handleAdvanceStage} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                                            <ArrowUpCircle size={18} /> Mark Stage Complete
+                                        </button>
+                                    )}
+                                    
+                                    {FARMING_STAGES[getCurrentStageIndex()].link && (
+                                        <a href={FARMING_STAGES[getCurrentStageIndex()].link} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
+                                            {FARMING_STAGES[getCurrentStageIndex()].linkText}
+                                        </a>
+                                    )}
+                                    
+                                    {getCurrentStageIndex() === FARMING_STAGES.length - 1 && (
+                                        <div style={{ textAlign: 'center', padding: '15px', background: 'rgba(76, 175, 80, 0.1)', color: 'var(--primary-dark)', borderRadius: '8px', fontWeight: 'bold' }}>
+                                            Cycle Complete! Ready for the next season.
+                                        </div>
+                                    )}
                                 </div>
-                                
-                                {getCurrentStageIndex() < FARMING_STAGES.length - 1 && (
-                                    <button onClick={handleAdvanceStage} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                                        <ArrowUpCircle size={18} /> Advance to Next Stage
-                                    </button>
-                                )}
-                                
-                                {FARMING_STAGES[getCurrentStageIndex()].link && (
-                                    <a href={FARMING_STAGES[getCurrentStageIndex()].link} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center', marginTop: '10px' }}>
-                                        {FARMING_STAGES[getCurrentStageIndex()].linkText}
-                                    </a>
-                                )}
-                                
-                                {getCurrentStageIndex() === FARMING_STAGES.length - 1 && (
-                                    <div style={{ textAlign: 'center', padding: '10px', background: 'rgba(76, 175, 80, 0.1)', color: 'var(--primary-dark)', borderRadius: '8px', fontWeight: 'bold' }}>
-                                        Cycle Complete! Ready for the next season.
-                                    </div>
-                                )}
                             </div>
                         </div>
                     ) : (
                         <div className="empty-state">
                             <Sprout size={48} opacity={0.3} />
-                            <p>No active crop detected.</p>
-                            <a href="/recommend-crop" className="btn btn-primary btn-sm">Recommend a Crop</a>
+                            <p>No active crop or season detected.</p>
+                            <button onClick={handleStartSeason} className="btn btn-primary btn-sm">Start New Season</button>
                         </div>
                     )}
                 </div>

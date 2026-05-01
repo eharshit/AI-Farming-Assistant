@@ -106,13 +106,13 @@ const CropRecommendation = () => {
         }
     };
 
-    const handleStartPlanting = async () => {
+    const handleStartPlanting = async (cropName) => {
         setSaving(true);
         try {
             await updateFarmStatus({
-                crop_name: result,
-                status: "Soil Preparation",
-                next_step: "Prepare land, clear weeds, and plow."
+                crop_name: cropName,
+                status: "Sowing & Planting",
+                next_step: "Plant seeds/saplings based on AI recommendations."
             });
             navigate('/dashboard');
         } catch (err) {
@@ -197,24 +197,24 @@ const CropRecommendation = () => {
 
                 {result && !loading && (
                     <div className="animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px', marginTop: '10px' }}>
-                        <div style={{ padding: '25px', background: 'rgba(76, 175, 80, 0.05)', border: '1px solid #e0e0e0', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ padding: '25px', background: 'rgba(76, 175, 80, 0.05)', border: '1px solid rgba(128, 128, 128, 0.2)', borderRadius: '12px', display: 'flex', flexDirection: 'column' }}>
                             <h3 style={{ color: 'var(--primary-dark)', marginBottom: '20px', fontSize: '1.1rem' }}>Top Recommendations</h3>
                             
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', flex: 1 }}>
                                 {allRecommendations.map((rec, idx) => (
                                     <div key={idx} style={{ 
                                         padding: idx === 0 ? '20px' : '15px', 
-                                        background: idx === 0 ? 'white' : 'transparent',
-                                        border: idx === 0 ? '2px solid var(--primary-color)' : '1px solid #eee',
+                                        background: idx === 0 ? 'var(--bg-white)' : 'transparent',
+                                        border: idx === 0 ? '2px solid var(--primary-color)' : '1px solid rgba(128, 128, 128, 0.2)',
                                         borderRadius: '10px',
                                         boxShadow: idx === 0 ? '0 4px 12px rgba(0,0,0,0.05)' : 'none',
                                         transition: 'all 0.3s ease'
                                     }}>
                                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                                            <span style={{ fontWeight: 'bold', fontSize: idx === 0 ? '1.4rem' : '1.1rem', textTransform: 'capitalize', color: idx === 0 ? 'var(--primary-color)' : '#333' }}>
+                                            <span style={{ fontWeight: 'bold', fontSize: idx === 0 ? '1.4rem' : '1.1rem', textTransform: 'capitalize', color: idx === 0 ? 'var(--primary-color)' : 'var(--text-dark)' }}>
                                                 {rec.crop}
                                             </span>
-                                            <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#666' }}>
+                                            <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-light)' }}>
                                                 {(rec.confidence * 100).toFixed(1)}% Match
                                             </span>
                                         </div>
@@ -238,8 +238,8 @@ const CropRecommendation = () => {
                             <button onClick={() => setResult(null)} style={{ marginTop: '20px', background: 'none', border: 'none', color: '#666', cursor: 'pointer', textDecoration: 'underline', alignSelf: 'center' }}>New Prediction</button>
                         </div>
 
-                        <div className="glass-panel" style={{ padding: '30px', background: 'white' }}>
-                            <h3 style={{ borderBottom: '2px solid #eee', paddingBottom: '10px', marginBottom: '20px' }}>Analysis Report</h3>
+                        <div className="glass-panel" style={{ padding: '30px', background: 'var(--bg-white)' }}>
+                            <h3 style={{ borderBottom: '2px solid rgba(128, 128, 128, 0.2)', paddingBottom: '10px', marginBottom: '20px' }}>Analysis Report</h3>
                             
                             <div style={{ marginBottom: '25px' }}>
                                 <h4 style={{ fontSize: '0.9rem', color: '#666', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '15px' }}>Key Insights</h4>
@@ -247,7 +247,7 @@ const CropRecommendation = () => {
                                     {analysis && analysis.length > 0 ? analysis.map((insight, idx) => (
                                         <div key={idx} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                                             <div style={{ minWidth: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary-color)', marginTop: '6px' }}></div>
-                                            <p style={{ margin: 0, fontSize: '0.95rem', color: '#444' }}>{insight}</p>
+                                            <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--text-dark)' }}>{insight}</p>
                                         </div>
                                     )) : (
                                         <p style={{ color: '#666' }}>Standard optimal conditions detected for this variety.</p>
