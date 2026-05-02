@@ -1,1 +1,1 @@
-# AgriSens Chat Services Package
+# Krishi Mitra Chat Services Package

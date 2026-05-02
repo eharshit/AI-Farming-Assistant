@@ -20,7 +20,7 @@ except ImportError:
     TF_AVAILABLE = False
     print("WARNING: TensorFlow not found. Running Disease endpoint in MOCK mode.")
 
-app = FastAPI(title="AgriSens API", version="1.0.0")
+app = FastAPI(title="Krishi Mitra API", version="1.0.0")
 
 # Enable CORS for the Vite React App
 app.add_middleware(
@@ -342,7 +342,7 @@ class FertilizerRequest(BaseModel):
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to AgriSens API"}
+    return {"message": "Welcome to Krishi Mitra API"}
 
 @app.post("/api/predict/price")
 async def predict_price(req: PriceRequest):
@@ -814,7 +814,7 @@ class ChatResponse(BaseModel):
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest):
     """
-    Unified conversational interface over all AgriSens ML endpoints.
+    Unified conversational interface over all Krishi Mitra ML endpoints.
     Accepts a user message, optional conversation history, and optional image.
     Returns a natural-language reply with sources and suggested next actions.
     """

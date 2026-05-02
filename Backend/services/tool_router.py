@@ -1,5 +1,5 @@
 """
-Tool router for the AgriSens chatbot.
+Tool router for the Krishi Mitra chatbot.
 Executes tool calls by invoking the existing internal endpoint functions
 directly (no HTTP round-trip). Uses lazy imports to avoid circular dependencies.
 """

@@ -1,5 +1,5 @@
 """
-Chat service for the AgriSens chatbot.
+Chat service for the Krishi Mitra chatbot.
 Main orchestrator that uses Gemini with function calling to provide
 a unified conversational interface over the existing ML endpoints.
 """

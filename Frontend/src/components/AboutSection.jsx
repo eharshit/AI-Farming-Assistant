@@ -28,13 +28,13 @@ const AboutSection = () => {
                     {/* Text / CTA Side */}
                     <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
                         <div style={{ display: 'inline-block', padding: '6px 16px', background: '#e8f5e9', color: '#2e7d32', borderRadius: '30px', fontWeight: '600', fontSize: '0.9rem', marginBottom: '20px' }}>
-                            ABOUT AGRISENS
+                            ABOUT KRISHI MITRA
                         </div>
                         <h2 style={{ fontSize: '2.5rem', color: 'var(--primary-dark)', marginBottom: '20px', lineHeight: '1.2' }}>
                             Transforming agriculture with intelligent data.
                         </h2>
                         <p style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.7', marginBottom: '30px' }}>
-                            AgriSens blends traditional farming wisdom with cutting-edge artificial intelligence.
+                            Krishi Mitra blends traditional farming wisdom with cutting-edge artificial intelligence.
                             Our deep learning models decode complex soil metrics and analyze crop imagery in milliseconds,
                             giving you actionable precision-farming advice right at your fingertips.
                         </p>

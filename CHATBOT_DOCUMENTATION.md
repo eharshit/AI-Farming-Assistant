@@ -1,10 +1,10 @@
-# AgriSens Chatbot Documentation
+# Krishi Mitra Chatbot Documentation
 
-This document outlines the architecture, rules, and integration details of the AI-powered chatbot implemented in the AgriSens project.
+This document outlines the architecture, rules, and integration details of the AI-powered chatbot implemented in the Krishi Mitra project.
 
 ## Architecture Overview
 
-The AgriSens chatbot is designed as an additive feature. It acts as an intelligent orchestration layer over the existing machine learning endpoints, ensuring zero disruption to the original API structure.
+The Krishi Mitra chatbot is designed as an additive feature. It acts as an intelligent orchestration layer over the existing machine learning endpoints, ensuring zero disruption to the original API structure.
 
 The architecture is composed of the following core components:
 
@@ -20,7 +20,7 @@ The architecture is composed of the following core components:
 The chatbot operates under a strict set of rules defined in `intent_parser.py` to ensure it behaves as a professional, cost-effective agricultural tool.
 
 ### 1. Strict Scope: Farming Only
-*   **Rule**: The bot MUST ONLY discuss agriculture, crops, soil, weather, diseases, fertilizers, market prices, and the AgriSens platform.
+*   **Rule**: The bot MUST ONLY discuss agriculture, crops, soil, weather, diseases, fertilizers, market prices, and the Krishi Mitra platform.
 *   **Enforcement**: If asked about coding, politics, or recipes, the bot will politely decline and steer the conversation back to farming. This prevents burning API quotas on irrelevant chats.
 
 ### 2. No Parameter Guessing
@@ -43,7 +43,7 @@ The chatbot operates under a strict set of rules defined in `intent_parser.py` t
 The frontend (`ChatWidget.jsx` and `ChatWidget.css`) was explicitly designed to avoid the "generic playful AI assistant" look, favoring a serious, functional tool aesthetic.
 
 *   **No Emojis**: Removed all conversational emojis. Replaced with clean, professional `lucide-react` icons.
-*   **Agricultural Branding**: Uses the existing AgriSens color palette (deep greens, high contrast borders). The header reads simply "AgriSens", matching the navbar.
+*   **Agricultural Branding**: Uses the existing Krishi Mitra color palette (deep greens, high contrast borders). The header reads simply "Krishi Mitra", matching the navbar.
 *   **Action-Oriented**: Suggested prompts are phrased as actionable tasks (e.g., "Predict onion prices in Maharashtra") rather than vague questions.
 *   **Clear Interaction States**: Action buttons have distinct hover and active states (background color changes, slight scale down) to feel like real tools, not just text.
 *   **Message Clarity**: High contrast between user messages (dark green, white text) and bot messages (light grey/white background, dark text) to ensure readability. No "bot/user" text labels to reduce clutter.

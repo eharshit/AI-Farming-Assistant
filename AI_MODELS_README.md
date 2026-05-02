@@ -1,6 +1,6 @@
-# AgriSens AI Models Documentation
+# Krishi Mitra AI Models Documentation
 
-This document provides a comprehensive overview of the Artificial Intelligence models used in the AgriSens project. The platform uses two main AI modules to assist farmers: **Plant Disease Identification** and **Crop Recommendation**.
+This document provides a comprehensive overview of the Artificial Intelligence models used in the Krishi Mitra project. The platform uses two main AI modules to assist farmers: **Plant Disease Identification** and **Crop Recommendation**.
 
 ---
 

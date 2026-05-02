@@ -214,14 +214,14 @@ export default function ChatWidget() {
       </button>
 
       {isOpen && (
-        <div className="chat-window" role="dialog" aria-label="AgriSens Chat">
+        <div className="chat-window" role="dialog" aria-label="Krishi Mitra Chat">
           {/* Header */}
           <div className="chat-header">
             <div className="chat-header-left">
               <div className="chat-header-icon">
                 <Sprout size={16} />
               </div>
-              <p className="chat-header-title">AgriSens</p>
+              <p className="chat-header-title">Krishi Mitra</p>
             </div>
             <div className="chat-header-actions">
               {messages.length > 0 && (

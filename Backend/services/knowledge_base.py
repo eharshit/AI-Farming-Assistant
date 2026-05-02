@@ -1,5 +1,5 @@
 """
-Knowledge base loader for the AgriSens chatbot.
+Knowledge base loader for the Krishi Mitra chatbot.
 Loads farming knowledge from existing project documentation to provide
 context to the LLM without calling any ML models.
 """
@@ -20,7 +20,7 @@ def _read_file(path: str) -> str:
 
 # Static platform guide extracted from FarmingGuide.jsx content
 PLATFORM_GUIDE = """
-## How to Use AgriSens Platform
+## How to Use Krishi Mitra Platform
 
 ### Step 1: Get Crop Recommendations
 - Go to the Crop Recommendation tool.

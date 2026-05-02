@@ -11,7 +11,7 @@ const AboutUs = () => {
                         Empowering Farmers with <span style={{ color: 'var(--primary-color)' }}>AI Innovation</span>
                     </h1>
                     <p className="hero-subtitle" style={{ maxWidth: '800px', margin: '0 auto', fontSize: '1.2rem', color: 'var(--text-light)' }}>
-                        AgriSens is dedicated to revolutionizing agriculture. By bridging the gap between state-of-the-art machine learning
+                        Krishi Mitra is dedicated to revolutionizing agriculture. By bridging the gap between state-of-the-art machine learning
                         and traditional farming practices, we build tools that enhance yield, reduce waste, and build sustainable futures.
                     </p>
                 </div>
@@ -32,10 +32,10 @@ const AboutUs = () => {
                     </div>
                     <div className="glass-panel" style={{ padding: '40px', display: 'flex', flexDirection: 'column' }}>
                         <h2 style={{ color: 'var(--primary-dark)', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <Cpu color="var(--primary-color)" size={32} /> The AgriSens Solution
+                            <Cpu color="var(--primary-color)" size={32} /> The Krishi Mitra Solution
                         </h2>
                         <p style={{ lineHeight: '1.8', fontSize: '1.1rem', color: 'var(--text-dark)' }}>
-                            We believe data is the new fertilizer. AgriSens utilizes powerful Convolutional Neural Networks (CNNs)
+                            We believe data is the new fertilizer. Krishi Mitra utilizes powerful Convolutional Neural Networks (CNNs)
                             and Random Forest algorithms to analyze millions of data points instantly. From diagnosing a subtle leaf
                             blight from a smartphone photo to pinpointing the exact NPK ratio your specific soil type needs—we bring
                             precision agriculture to everyone.

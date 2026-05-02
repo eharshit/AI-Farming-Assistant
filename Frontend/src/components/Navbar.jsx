@@ -19,7 +19,7 @@ const Navbar = () => {
             <div className="container nav-content">
                 <Link to="/" className="brand">
                     <Leaf className="brand-icon" size={28} color="var(--primary-color)" />
-                    <h1 className="brand-title">AgriSens</h1>
+                    <h1 className="brand-title">Krishi Mitra</h1>
                 </Link>
                 <nav className="nav-links">
                     <Link to="/" className="nav-link">Home</Link>

@@ -1,5 +1,5 @@
 /* ============================================================
-   AgriSens Chat Widget
+   Krishi Mitra Chat Widget
    Font: inherits 'Inter' from index.css — no separate imports
    ============================================================ */
 
@@ -493,4 +493,81 @@
     bottom: 14px;
     right: 14px;
   }
+}
+
+/* --- Dark Theme Overrides --- */
+[data-theme='dark'] .chat-window {
+  background: var(--bg-white);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] .chat-messages {
+  background: var(--bg-light);
+}
+
+[data-theme='dark'] .chat-action-btn {
+  background: var(--bg-white);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-dark);
+}
+
+[data-theme='dark'] .chat-action-btn:hover {
+  background: rgba(46, 125, 50, 0.2);
+  border-color: var(--primary-color);
+}
+
+[data-theme='dark'] .chat-action-btn .action-icon {
+  background: rgba(46, 125, 50, 0.2);
+}
+
+[data-theme='dark'] .chat-msg.bot .msg-bubble {
+  background: var(--bg-white);
+  color: var(--text-dark);
+}
+
+[data-theme='dark'] .chat-msg.user .msg-bubble {
+  background: rgba(46, 125, 50, 0.2);
+  border-color: rgba(46, 125, 50, 0.3);
+  color: var(--text-dark);
+}
+
+[data-theme='dark'] .suggestion-chip {
+  background: var(--bg-white);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-dark);
+}
+
+[data-theme='dark'] .suggestion-chip:hover {
+  background: rgba(46, 125, 50, 0.2);
+}
+
+[data-theme='dark'] .chat-input-area {
+  background: var(--bg-white);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .chat-text-input {
+  background: var(--bg-light);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-dark);
+}
+
+[data-theme='dark'] .chat-text-input::placeholder {
+  color: var(--text-light);
+}
+
+[data-theme='dark'] .chat-icon-btn {
+  background: var(--bg-light);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-light);
+}
+
+[data-theme='dark'] .chat-icon-btn:hover {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+[data-theme='dark'] .chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
 }

@@ -39,9 +39,9 @@ function App() {
 
         <footer style={{ background: 'var(--primary-dark)', color: 'white', padding: '40px 20px', textAlign: 'center', marginTop: '60px' }}>
           <div className="container">
-            <h2 style={{ color: 'white', marginBottom: '15px' }}>AgriSens AI</h2>
+            <h2 style={{ color: 'white', marginBottom: '15px' }}>Krishi Mitra AI</h2>
             <p style={{ opacity: 0.8, maxWidth: '600px', margin: '0 auto 20px' }}>Empowering agriculture with state-of-the-art machine learning models for disease prediction and crop optimization.</p>
-            <p>&copy; 2026 AgriSens AI Platform. All rights reserved.</p>
+            <p>&copy; 2026 Krishi Mitra AI Platform. All rights reserved.</p>
           </div>
         </footer>
       </div>

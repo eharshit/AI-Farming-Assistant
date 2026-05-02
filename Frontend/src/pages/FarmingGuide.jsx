@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Droplets, Leaf, Shield, Tractor, ChevronRight, CheckCircle2 } from 'lucide-react';
+import { BookOpen, Droplets, Leaf, Shield, Tractor, ChevronRight, CheckCircle2, TrendingUp, MessageSquare, Moon } from 'lucide-react';
 
 const guideTopics = [
     {
@@ -51,7 +51,57 @@ const guideTopics = [
                 <ul className="guide-list">
                     <li><CheckCircle2 size={18} color="var(--primary-color)" /> <span><strong>Fertilizer Advice:</strong> Run the Fertilizer tool to get tailored nutrient recommendations. Click <strong>"Apply to Dashboard"</strong> to update your farm's schedule.</span></li>
                     <li><CheckCircle2 size={18} color="var(--primary-color)" /> <span><strong>Disease ID:</strong> Upload a photo of any suspicious leaf spots to identify diseases instantly and get treatment tips.</span></li>
-                    <li><CheckCircle2 size={18} color="var(--primary-color)" /> <span><strong>Weather Sync:</strong> Stay ahead of storms or droughts with the real-time weather forecast.</span></li>
+                </ul>
+            </div>
+        )
+    },
+    {
+        id: 'price',
+        title: 'Step 4: Market Prices',
+        icon: <TrendingUp size={24} />,
+        content: (
+            <div className="guide-content-section animate-fade-in">
+                <h2>Predict Commodity Prices</h2>
+                <p>Maximize your profits by using the <strong>Market Price Prediction</strong> tool to forecast commodity prices up to 6 months in advance.</p>
+                
+                <h3>Procedures:</h3>
+                <ul className="guide-list">
+                    <li><CheckCircle2 size={18} color="var(--primary-color)" /> <span><strong>Select Details:</strong> Choose your commodity, state, district, and APMC market.</span></li>
+                    <li><CheckCircle2 size={18} color="var(--primary-color)" /> <span><strong>Forecast:</strong> View the predicted modal prices for the upcoming 6 months to decide the best time to sell.</span></li>
+                </ul>
+            </div>
+        )
+    },
+    {
+        id: 'chatbot',
+        title: 'Step 5: AI Assistant',
+        icon: <MessageSquare size={24} />,
+        content: (
+            <div className="guide-content-section animate-fade-in">
+                <h2>Your Conversational Farm Assistant</h2>
+                <p>Have a question or need quick advice? The floating <strong>Chatbot Widget</strong> (bottom right) is always available to help.</p>
+                
+                <h3>Capabilities:</h3>
+                <ul className="guide-list">
+                    <li><CheckCircle2 size={18} color="var(--primary-color)" /> <span><strong>Multi-Tool Orchestration:</strong> You can ask the bot directly to recommend crops or fertilizers by providing your soil data in the chat.</span></li>
+                    <li><CheckCircle2 size={18} color="var(--primary-color)" /> <span><strong>Image Diagnosis:</strong> Click the image icon to attach a picture of a diseased leaf directly in the chat, and the bot will identify the problem and suggest treatments.</span></li>
+                    <li><CheckCircle2 size={18} color="var(--primary-color)" /> <span><strong>Knowledge Base:</strong> Ask general farming questions—the bot is trained on all our documentation.</span></li>
+                </ul>
+            </div>
+        )
+    },
+    {
+        id: 'ui-tips',
+        title: 'UI Tips: Customization',
+        icon: <Moon size={24} />,
+        content: (
+            <div className="guide-content-section animate-fade-in">
+                <h2>Personalize Your Experience</h2>
+                <p>We've added features to make the platform comfortable for you to use at any time of day.</p>
+                
+                <h3>Features:</h3>
+                <ul className="guide-list">
+                    <li><CheckCircle2 size={18} color="var(--primary-color)" /> <span><strong>Global Dark Mode:</strong> Click the sun/moon icon in the top navigation bar to toggle Dark Mode. The entire dashboard, including the chat widget, will instantly adapt to a dark aesthetic.</span></li>
                 </ul>
             </div>
         )
@@ -65,7 +115,7 @@ const FarmingGuide = () => {
         <div className="container section animate-fade-in pb-8">
             <div className="text-center" style={{ marginBottom: '40px' }}>
                 <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                    <BookOpen color="var(--primary-color)" size={36} /> How to Use AgriSens
+                    <BookOpen color="var(--primary-color)" size={36} /> How to Use Krishi Mitra
                 </h1>
                 <p className="hero-subtitle">A quick guide to mastering your AI-powered farm management dashboard.</p>
             </div>
