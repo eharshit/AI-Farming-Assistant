@@ -33,7 +33,20 @@ const FertilizerRecommendation = () => {
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        let { name, value } = e.target;
+        
+        if (value !== '') {
+            const numValue = parseFloat(value);
+            if (numValue < 0) {
+                setFormData({ ...formData, [name]: '0' });
+                return;
+            }
+            if ((name === 'humidity' || name === 'moisture') && numValue > 100) { setFormData({ ...formData, [name]: '100' }); return; }
+            if (name === 'temperature' && numValue > 60) { setFormData({ ...formData, [name]: '60' }); return; }
+            if ((name === 'nitrogen' || name === 'phosphorus' || name === 'potassium') && numValue > 300) { setFormData({ ...formData, [name]: '300' }); return; }
+        }
+        
+        setFormData({ ...formData, [name]: value });
     };
 
     const handleSubmit = async (e) => {
@@ -124,17 +137,17 @@ const FertilizerRecommendation = () => {
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         <label style={{ fontWeight: '600' }}>Temperature (°C)</label>
-                        <input type="number" step="0.1" name="temperature" value={formData.temperature} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
+                        <input type="number" step="0.1" name="temperature" min="0" max="60" value={formData.temperature} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         <label style={{ fontWeight: '600' }}>Humidity (%)</label>
-                        <input type="number" step="0.1" name="humidity" value={formData.humidity} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
+                        <input type="number" step="0.1" name="humidity" min="0" max="100" value={formData.humidity} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         <label style={{ fontWeight: '600' }}>Moisture (%)</label>
-                        <input type="number" step="0.1" name="moisture" value={formData.moisture} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
+                        <input type="number" step="0.1" name="moisture" min="0" max="100" value={formData.moisture} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -157,17 +170,17 @@ const FertilizerRecommendation = () => {
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         <label style={{ fontWeight: '600' }}>Nitrogen (N)</label>
-                        <input type="number" step="0.1" name="nitrogen" value={formData.nitrogen} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
+                        <input type="number" step="0.1" name="nitrogen" min="0" max="300" value={formData.nitrogen} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         <label style={{ fontWeight: '600' }}>Phosphorus (P)</label>
-                        <input type="number" step="0.1" name="phosphorus" value={formData.phosphorus} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
+                        <input type="number" step="0.1" name="phosphorus" min="0" max="300" value={formData.phosphorus} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         <label style={{ fontWeight: '600' }}>Potassium (K)</label>
-                        <input type="number" step="0.1" name="potassium" value={formData.potassium} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
+                        <input type="number" step="0.1" name="potassium" min="0" max="300" value={formData.potassium} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc' }} />
                     </div>
 
                     <div style={{ gridColumn: 'span 2', marginTop: '20px' }}>
