@@ -387,4 +387,19 @@ h4 {
     flex-direction: column;
     gap: 20px;
   }
+
+  .prediction-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .prediction-form-grid button[style*="grid-column"] {
+    grid-column: span 1 !important;
+  }
+}
+
+/* Prediction form grid */
+.prediction-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
