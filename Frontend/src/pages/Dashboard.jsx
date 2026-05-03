@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getFarmStatus, getRecommendationHistory, resetFarmStatus, updateFarmStatus } from '../services/api';
-import { LayoutDashboard, Sprout, Calendar, ArrowRight, Trash2, History, AlertCircle, ArrowUpCircle } from 'lucide-react';
+import { LayoutDashboard, Sprout, Calendar, ArrowRight, Trash2, History, AlertCircle, ArrowUpCircle, CloudSun, Search, FlaskConical, Leaf, TrendingUp, CheckCircle2, Clock } from 'lucide-react';
 import './Dashboard.css';
 
 const FARMING_STAGES = [
-    { label: 'Soil Preparation', action: 'Prepare land, clear weeds, and plow.', link: null, linkText: null },
-    { label: 'Sowing & Planting', action: 'Plant seeds/saplings based on AI recommendations.', link: '/recommend-crop', linkText: '🌱 Get Crop Recommendation' },
-    { label: 'Watering & Growth', action: 'Maintain regular irrigation and monitor.', link: '/weather', linkText: '🌦️ Check Weather Forecast' },
-    { label: 'Fertilizer Application', action: 'Apply recommended nutrients.', link: '/recommend-fertilizer', linkText: '🧪 Get Fertilizer Plan' },
-    { label: 'Harvesting', action: 'Collect mature crops.', link: '/identify-disease', linkText: '🔍 Scan for Post-Harvest Diseases' },
-    { label: 'Market & Selling', action: 'Check market prices and sell produce.', link: '/predict-price', linkText: '📈 Predict Market Prices' }
+    { label: 'Soil Preparation', action: 'Prepare land, clear weeds, and plow.', link: null, linkText: null, linkIcon: null },
+    { label: 'Sowing & Planting', action: 'Plant seeds/saplings based on AI recommendations.', link: '/recommend-crop', linkText: 'Get Crop Recommendation', linkIcon: Leaf },
+    { label: 'Watering & Growth', action: 'Maintain regular irrigation and monitor.', link: '/weather', linkText: 'Check Weather Forecast', linkIcon: CloudSun },
+    { label: 'Fertilizer Application', action: 'Apply recommended nutrients.', link: '/recommend-fertilizer', linkText: 'Get Fertilizer Plan', linkIcon: FlaskConical },
+    { label: 'Harvesting', action: 'Collect mature crops.', link: '/identify-disease', linkText: 'Scan for Diseases', linkIcon: Search },
+    { label: 'Market & Selling', action: 'Check market prices and sell produce.', link: '/predict-price', linkText: 'Predict Market Prices', linkIcon: TrendingUp }
 ];
 
 const Dashboard = () => {
@@ -103,198 +103,230 @@ const Dashboard = () => {
         return index !== -1 ? index : 0;
     };
 
-    const getProgressPercentage = () => {
-        const index = getCurrentStageIndex();
-        return Math.round((index / (FARMING_STAGES.length - 1)) * 100);
-    };
-
     if (loading) return (
         <div className="container section" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
             <div className="loader">Loading Dashboard...</div>
         </div>
     );
 
+    const currentStageIdx = getCurrentStageIndex();
+    const currentStage = FARMING_STAGES[currentStageIdx];
+    const StageIcon = currentStage.linkIcon;
+
     return (
         <div className="container section animate-fade-in">
-            <div className="dashboard-header">
-                <h1><LayoutDashboard /> Farm Management Dashboard</h1>
-                <p className="hero-subtitle">Monitor your crops, track progress, and view latest AI insights.</p>
+            {/* Header */}
+            <div className="dash-header">
+                <div className="dash-header-text">
+                    <h1>Dashboard</h1>
+                    <p>Monitor crops, track progress, and access AI tools.</p>
+                </div>
             </div>
 
-            <div className="dashboard-grid">
-                {/* Current Status Card */}
-                <div className="glass-panel status-card">
-                    <div className="card-header">
-                        <h2>Current Activity</h2>
-                        {status && (
-                            <button onClick={handleReset} className="btn-icon text-error" title="Reset Dashboard">
-                                <Trash2 size={18} />
-                            </button>
-                        )}
-                    </div>
+            <div className="dash-grid">
+                {/* ---- LEFT COLUMN ---- */}
+                <div className="dash-left">
+                    {/* Current Activity */}
+                    <div className="dash-card">
+                        <div className="dash-card-top">
+                            <div className="dash-card-title">
+                                <Sprout size={18} />
+                                <span>Current Activity</span>
+                            </div>
+                            {status && (
+                                <button onClick={handleReset} className="btn-icon text-error" title="Reset">
+                                    <Trash2 size={16} />
+                                </button>
+                            )}
+                        </div>
 
-                    {status ? (
-                        <div className="status-content">
-                            <div className="crop-badge animate-pulse">
-                                <Sprout size={40} />
-                                <div>
-                                    <h3>{status.crop_name}</h3>
-                                    <span className="status-tag">{status.status}</span>
+                        {status ? (
+                            <>
+                                {/* Crop info row */}
+                                <div className="dash-crop-row">
+                                    <div className="dash-crop-icon">
+                                        <Sprout size={22} />
+                                    </div>
+                                    <div className="dash-crop-info">
+                                        <h3>{status.crop_name}</h3>
+                                        <span className="dash-stage-tag">{status.status}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="status-details">
-                                <div className="detail-item">
-                                    <Calendar size={18} />
-                                    <span>Planted on: {status.date_planted} ({calculateDaysPlanted(status.date_planted)} days ago)</span>
+
+                                {/* Meta */}
+                                <div className="dash-meta">
+                                    <div className="dash-meta-item">
+                                        <Calendar size={15} />
+                                        <span>Planted {status.date_planted} &middot; {calculateDaysPlanted(status.date_planted)}d ago</span>
+                                    </div>
+                                    <div className="dash-meta-item">
+                                        <AlertCircle size={15} />
+                                        <span><strong>Next:</strong> {status.next_step}</span>
+                                    </div>
                                 </div>
-                                <div className="detail-item">
-                                    <AlertCircle size={18} />
-                                    <span><strong>Next Step:</strong> {status.next_step}</span>
-                                </div>
-                            </div>
-                            <div className="tracker-container" style={{ margin: '30px 0 20px 0' }}>
-                                <div className="tracker-stepper">
+
+                                {/* Stepper */}
+                                <div className="dash-stepper">
                                     {FARMING_STAGES.map((stage, idx) => {
-                                        const currentIndex = getCurrentStageIndex();
-                                        const isCompleted = idx < currentIndex;
-                                        const isActive = idx === currentIndex;
-
+                                        const isCompleted = idx < currentStageIdx;
+                                        const isActive = idx === currentStageIdx;
                                         return (
-                                            <div key={idx} className={`tracker-step ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}`}>
-                                                <div className="tracker-circle">
-                                                    {isCompleted ? '✓' : idx + 1}
+                                            <div key={idx} className={`dash-step ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}`}>
+                                                <div className="dash-step-dot">
+                                                    {isCompleted ? <CheckCircle2 size={14} /> : <span>{idx + 1}</span>}
                                                 </div>
-                                                <div className="tracker-label">{stage.label}</div>
-                                                {idx < FARMING_STAGES.length - 1 && <div className="tracker-line"></div>}
+                                                <div className="dash-step-label">{stage.label}</div>
+                                                {idx < FARMING_STAGES.length - 1 && <div className="dash-step-line" />}
                                             </div>
                                         );
                                     })}
                                 </div>
 
-                                <div className="tracker-actions" style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                                    {getCurrentStageIndex() < FARMING_STAGES.length - 1 && (
-                                        <button onClick={handleAdvanceStage} className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
-                                            <ArrowUpCircle size={18} /> Mark Stage Complete
+                                {/* Actions */}
+                                <div className="dash-actions">
+                                    {currentStageIdx < FARMING_STAGES.length - 1 && (
+                                        <button onClick={handleAdvanceStage} className="dash-btn-primary">
+                                            <ArrowUpCircle size={16} /> Mark Stage Complete
                                         </button>
                                     )}
-                                    
-                                    {FARMING_STAGES[getCurrentStageIndex()].link && (
-                                        <a href={FARMING_STAGES[getCurrentStageIndex()].link} className="btn btn-secondary" style={{ width: '100%', justifyContent: 'center' }}>
-                                            {FARMING_STAGES[getCurrentStageIndex()].linkText}
+                                    {currentStage.link && StageIcon && (
+                                        <a href={currentStage.link} className="dash-btn-outline">
+                                            <StageIcon size={16} /> {currentStage.linkText}
                                         </a>
                                     )}
-                                    
-                                    {getCurrentStageIndex() === FARMING_STAGES.length - 1 && (
-                                        <div style={{ textAlign: 'center', padding: '15px', background: 'rgba(76, 175, 80, 0.1)', color: 'var(--primary-dark)', borderRadius: '8px', fontWeight: 'bold' }}>
-                                            Cycle Complete! Ready for the next season.
+                                    {currentStageIdx === FARMING_STAGES.length - 1 && (
+                                        <div className="dash-complete-banner">
+                                            <CheckCircle2 size={16} /> Cycle complete — ready for next season.
                                         </div>
                                     )}
                                 </div>
+                            </>
+                        ) : (
+                            <div className="dash-empty">
+                                <Sprout size={36} strokeWidth={1.5} />
+                                <p>No active crop detected.</p>
+                                <button onClick={handleStartSeason} className="dash-btn-primary">Start New Season</button>
                             </div>
-                        </div>
-                    ) : (
-                        <div className="empty-state">
-                            <Sprout size={48} opacity={0.3} />
-                            <p>No active crop or season detected.</p>
-                            <button onClick={handleStartSeason} className="btn btn-primary btn-sm">Start New Season</button>
-                        </div>
-                    )}
-                </div>
-
-                {/* Quick Actions / Integration Info */}
-                <div className="glass-panel info-card">
-                    <h2>Smart Farming Tools</h2>
-                    <div className="action-links">
-                        <a href="/weather" className="action-item">
-                            <div className="action-icon weather">🌦️</div>
-                            <div className="action-text">
-                                <h4>Check Weather</h4>
-                                <p>Plan irrigation based on forecast</p>
-                            </div>
-                            <ArrowRight size={16} />
-                        </a>
-                        <a href="/identify-disease" className="action-item">
-                            <div className="action-icon disease">🔍</div>
-                            <div className="action-text">
-                                <h4>Identify Disease</h4>
-                                <p>Upload leaf images for diagnosis</p>
-                            </div>
-                            <ArrowRight size={16} />
-                        </a>
-                        <a href="/recommend-fertilizer" className="action-item">
-                            <div className="action-icon fertilizer">🧪</div>
-                            <div className="action-text">
-                                <h4>Optimise Nutrients</h4>
-                                <p>Get fertilizer recommendations</p>
-                            </div>
-                            <ArrowRight size={16} />
-                        </a>
+                        )}
                     </div>
                 </div>
 
-                {/* Fertilizers Used Card */}
-                <div className="glass-panel history-card" style={{ gridColumn: 'span 1' }}>
-                    <div className="card-header">
-                        <h2><History size={20} /> Fertilizers Recommended</h2>
-                    </div>
-                    {history.filter(i => i.type.toLowerCase() === 'fertilizer').length > 0 ? (
-                        <div className="history-list">
-                            {history.filter(i => i.type.toLowerCase() === 'fertilizer').slice(0, 5).map((item) => (
-                                <div key={item.id} className="history-item">
-                                    <div className="type-dot fertilizer"></div>
-                                    <div className="history-info">
-                                        <span className="history-result" style={{ fontSize: '1.1rem' }}>{item.result}</span>
-                                    </div>
-                                    <span className="history-time">{item.timestamp}</span>
+                {/* ---- RIGHT COLUMN ---- */}
+                <div className="dash-right">
+                    {/* Tools */}
+                    <div className="dash-card">
+                        <div className="dash-card-top">
+                            <div className="dash-card-title">
+                                <LayoutDashboard size={18} />
+                                <span>Quick Actions</span>
+                            </div>
+                        </div>
+                        <div className="dash-tools">
+                            <a href="/weather" className="dash-tool-item">
+                                <div className="dash-tool-icon weather"><CloudSun size={20} /></div>
+                                <div className="dash-tool-text">
+                                    <h4>Weather</h4>
+                                    <p>Irrigation planning</p>
                                 </div>
-                            ))}
+                                <ArrowRight size={14} className="dash-tool-arrow" />
+                            </a>
+                            <a href="/identify-disease" className="dash-tool-item">
+                                <div className="dash-tool-icon disease"><Search size={20} /></div>
+                                <div className="dash-tool-text">
+                                    <h4>Disease Scanner</h4>
+                                    <p>Leaf image diagnosis</p>
+                                </div>
+                                <ArrowRight size={14} className="dash-tool-arrow" />
+                            </a>
+                            <a href="/recommend-fertilizer" className="dash-tool-item">
+                                <div className="dash-tool-icon fertilizer"><FlaskConical size={20} /></div>
+                                <div className="dash-tool-text">
+                                    <h4>Nutrients</h4>
+                                    <p>Fertilizer recommendations</p>
+                                </div>
+                                <ArrowRight size={14} className="dash-tool-arrow" />
+                            </a>
+                            <a href="/predict-price" className="dash-tool-item">
+                                <div className="dash-tool-icon price"><TrendingUp size={20} /></div>
+                                <div className="dash-tool-text">
+                                    <h4>Market Prices</h4>
+                                    <p>6-month forecasting</p>
+                                </div>
+                                <ArrowRight size={14} className="dash-tool-arrow" />
+                            </a>
                         </div>
-                    ) : (
-                        <p className="text-muted" style={{ textAlign: 'center', padding: '20px' }}>No fertilizer history yet.</p>
-                    )}
-                </div>
+                    </div>
 
-                {/* Diseases Identified Card */}
-                <div className="glass-panel history-card" style={{ gridColumn: 'span 1' }}>
-                    <div className="card-header">
-                        <h2><History size={20} /> Diseases Identified</h2>
+                    {/* Fertilizer History */}
+                    <div className="dash-card">
+                        <div className="dash-card-top">
+                            <div className="dash-card-title">
+                                <FlaskConical size={18} />
+                                <span>Fertilizer History</span>
+                            </div>
+                        </div>
+                        {history.filter(i => i.type.toLowerCase() === 'fertilizer').length > 0 ? (
+                            <div className="dash-history-list">
+                                {history.filter(i => i.type.toLowerCase() === 'fertilizer').slice(0, 4).map((item) => (
+                                    <div key={item.id} className="dash-history-row">
+                                        <div className="dash-dot fertilizer" />
+                                        <span className="dash-history-name">{item.result}</span>
+                                        <span className="dash-history-time"><Clock size={12} /> {item.timestamp}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="dash-muted">No fertilizer history yet.</p>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Bottom row — full width */}
+            <div className="dash-bottom-row">
+                {/* Disease History */}
+                <div className="dash-card">
+                    <div className="dash-card-top">
+                        <div className="dash-card-title">
+                            <Search size={18} />
+                            <span>Diseases Identified</span>
+                        </div>
                     </div>
                     {history.filter(i => i.type.toLowerCase() === 'disease').length > 0 ? (
-                        <div className="history-list">
+                        <div className="dash-history-list">
                             {history.filter(i => i.type.toLowerCase() === 'disease').slice(0, 5).map((item) => (
-                                <div key={item.id} className="history-item">
-                                    <div className="type-dot disease"></div>
-                                    <div className="history-info">
-                                        <span className="history-result" style={{ fontSize: '1.1rem' }}>{item.result.replace(/___/g, " - ").replace(/_/g, " ")}</span>
-                                    </div>
-                                    <span className="history-time">{item.timestamp}</span>
+                                <div key={item.id} className="dash-history-row">
+                                    <div className="dash-dot disease" />
+                                    <span className="dash-history-name">{item.result.replace(/___/g, " - ").replace(/_/g, " ")}</span>
+                                    <span className="dash-history-time"><Clock size={12} /> {item.timestamp}</span>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p className="text-muted" style={{ textAlign: 'center', padding: '20px' }}>No disease history yet.</p>
+                        <p className="dash-muted">No disease history yet.</p>
                     )}
                 </div>
 
-                {/* General History List (Crops) */}
-                <div className="glass-panel history-card" style={{ gridColumn: 'span 2' }}>
-                    <div className="card-header">
-                        <h2><History size={20} /> Crop Recommendations</h2>
+                {/* Crop Recommendations */}
+                <div className="dash-card">
+                    <div className="dash-card-top">
+                        <div className="dash-card-title">
+                            <Leaf size={18} />
+                            <span>Crop Recommendations</span>
+                        </div>
                     </div>
                     {history.filter(i => i.type.toLowerCase() === 'crop').length > 0 ? (
-                        <div className="history-list">
+                        <div className="dash-history-list">
                             {history.filter(i => i.type.toLowerCase() === 'crop').map((item) => (
-                                <div key={item.id} className="history-item">
-                                    <div className="type-dot crop"></div>
-                                    <div className="history-info">
-                                        <span className="history-result">{item.result}</span>
-                                    </div>
-                                    <span className="history-time">{item.timestamp}</span>
+                                <div key={item.id} className="dash-history-row">
+                                    <div className="dash-dot crop" />
+                                    <span className="dash-history-name">{item.result}</span>
+                                    <span className="dash-history-time"><Clock size={12} /> {item.timestamp}</span>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <p className="text-muted" style={{ textAlign: 'center', padding: '20px' }}>No crop recommendation history available yet.</p>
+                        <p className="dash-muted">No crop recommendations yet.</p>
                     )}
                 </div>
             </div>
