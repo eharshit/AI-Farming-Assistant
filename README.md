@@ -11,7 +11,7 @@ Krishi Mitra is an end-to-end, AI-backed farm management application built to em
 
 - **🚜 Live Farm Management Dashboard:** Track your crop's lifecycle (Soil Preparation to Market) with interactive milestones and contextual "Next Step" advice.
 - **🌱 Crop & Fertilizer Recommendation:** Machine learning models analyze soil nutrients (N, P, K), pH, and weather conditions to suggest the optimal crop and fertilizer for maximum yield.
-- **🔍 Plant Disease Identification:** Upload images of diseased leaves to our CNN model for instant diagnosis and treatment suggestions.
+- **🔍 Plant Disease Identification:** Upload images of diseased leaves to our CNN model for instant diagnosis and treatment suggestions. Now includes robust Out-of-Distribution (OOD) rejection to identify and reject non-plant images and uncertain predictions.
 - **📈 Market Price Prediction:** Forecast commodity modal prices up to 6 months in advance using historical APMC market data to time your market entry perfectly.
 - **💬 Conversational AI Assistant:** A floating chatbot powered by Google Gemini that can orchestrate all platform tools, parse intent, read images, and answer domain-specific questions via an internal knowledge base.
 - **🌙 Global Dark Mode:** A seamlessly integrated dark theme that reduces eye strain, controllable via a simple toggle.
