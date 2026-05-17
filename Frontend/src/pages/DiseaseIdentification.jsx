@@ -88,7 +88,9 @@ const DiseaseIdentification = () => {
 
                 {result && (
                     <div className="animate-fade-in" style={{ marginTop: '30px', padding: '30px', background: 'rgba(76, 175, 80, 0.1)', border: '2px solid var(--primary-color)', borderRadius: '12px', textAlign: 'center' }}>
-                        <h3 style={{ color: 'var(--primary-dark)', marginBottom: '5px' }}>Diagnosis Complete</h3>
+                        <h3 style={{ color: 'var(--primary-dark)', marginBottom: '5px' }}>
+                            {result.status === 'uncertain' ? 'Unable to Confirm Disease' : 'Diagnosis Complete'}
+                        </h3>
 
                         <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--text-dark)', margin: '15px 0' }}>
                             {result.disease_class.replace(/___/g, " - ").replace(/_/g, " ")}
@@ -97,12 +99,30 @@ const DiseaseIdentification = () => {
                         <div style={{ display: 'inline-block', padding: '5px 15px', background: 'var(--primary-color)', color: 'white', borderRadius: '50px', fontWeight: '600' }}>
                             Confidence: {(result.confidence * 100).toFixed(2)}%
                         </div>
+
+                        {result.reason && (
+                            <p style={{ marginTop: '15px', color: 'var(--text-light)' }}>
+                                {result.reason}
+                            </p>
+                        )}
+
+                        {result.top_predictions && result.top_predictions.length > 0 && (
+                            <div style={{ marginTop: '20px', textAlign: 'left', background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
+                                <h4 style={{ color: 'var(--primary-dark)', marginBottom: '12px' }}>Closest Matches</h4>
+                                {result.top_predictions.map((prediction, idx) => (
+                                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', marginBottom: '8px', color: 'var(--text-dark)' }}>
+                                        <span>{prediction.disease_class.replace(/___/g, " - ").replace(/_/g, " ")}</span>
+                                        <strong>{(prediction.confidence * 100).toFixed(2)}%</strong>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                         
                         {result.suggestions && result.suggestions.length > 0 && (
                             <div style={{ marginTop: '25px', textAlign: 'left', background: 'white', padding: '25px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
                                 <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary-dark)', marginBottom: '15px', fontSize: '1.2rem' }}>
                                     {result.disease_class.includes('healthy') ? <Leaf size={20} /> : <CheckCircle size={20} />}
-                                    {result.disease_class.includes('healthy') ? 'Maintenance Plan' : 'Actionable Treatment Plan'}
+                                    {result.status === 'uncertain' ? 'Upload Guidance' : result.disease_class.includes('healthy') ? 'Maintenance Plan' : 'Actionable Treatment Plan'}
                                 </h4>
                                 <ul style={{ padding: 0, margin: 0 }}>
                                     {result.suggestions.map((suggestion, idx) => (
