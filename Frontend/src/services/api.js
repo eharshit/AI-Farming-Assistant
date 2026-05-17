@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_HOST = window.location.hostname || '127.0.0.1';
+const API_BASE_URL = `http://${API_HOST}:8000/api`;
 
 export const predictCrop = async (data) => {
     try {
@@ -16,11 +17,7 @@ export const predictDisease = async (file) => {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await axios.post(`${API_BASE_URL}/predict/disease`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        const response = await axios.post(`${API_BASE_URL}/predict/disease`, formData);
         return response.data;
     } catch (error) {
         throw error.response?.data || { detail: "Network error connecting to AI Server" };
