@@ -45,7 +45,7 @@ Krishi Mitra utilizes four distinct predictive models, each tailored for a speci
 - **Architecture**: We implemented a Stacked Ensemble approach to capture complex non-linear patterns.
   - *Base Learners*: Random Forest Classifier & Gradient Boosting Classifier.
   - *Meta-Learner*: A secondary Random Forest trained on the base models' predictions.
-- **Performance**: This approach yielded an exceptional accuracy of **~98.86%** on the 22-class dataset.
+- **Performance**: This approach yielded an exceptional cross-validation accuracy of **~99.55%** on the 22-class dataset.
 
 **Model Accuracy Comparison Graph:**
 ![Crop Recommendation Accuracy](ML_Training/CROP-RECOMMENDATION/model_accuracy_test.png)
@@ -68,7 +68,8 @@ Krishi Mitra utilizes four distinct predictive models, each tailored for a speci
 - **Architecture**: A Random Forest Classifier with `n_estimators=100`.
 - **Inputs**: Soil type, Crop type, Moisture, ambient conditions, and soil N-P-K levels.
 - **Outputs**: Maps the input vector to commercially available fertilizers (e.g., Urea, DAP, 14-35-14).
-- **Deployment**: Integrated directly into the FastAPI backend alongside serialized `LabelEncoders` to handle categorical inputs gracefully.
+- **Performance**: Validated strictly against data leakage, achieving a robust generalized accuracy of **~91.67%** (CV Macro F1 ~0.85).
+- **Deployment**: Integrated directly into the FastAPI backend using unified Scikit-Learn Pipelines.
 
 ### 4.4 Market Price Prediction
 **Objective**: Forecast agricultural commodity modal prices to help farmers time their market entry.
@@ -76,7 +77,7 @@ Krishi Mitra utilizes four distinct predictive models, each tailored for a speci
 - **Architecture**: A Random Forest Regressor optimized for time-series and categorical interaction.
 - **Dataset**: Trained on ~836,977 historical records from APMC markets across India spanning 249 commodities.
 - **Features**: Commodity Name, State, District, Market, and Target Month.
-- **Performance**: Achieved an **R² Score of ~0.8688**, indicating strong predictive capability for 6-month forecasting windows.
+- **Performance**: Achieved an **R² Score of ~0.8764**, indicating strong predictive capability for 6-month forecasting windows.
 - **Deployment**: The model handles unseen market categories robustly through specialized 'Unknown' class fallbacks within its custom encoders.
 
 ---

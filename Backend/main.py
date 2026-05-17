@@ -58,17 +58,15 @@ except Exception as e:
     crop_ensemble = None
 
 # Fertilizer Models  
-fertilizer_model_path = os.path.join(MODEL_DIR, "fertilizer_model.pkl")
-fertilizer_soil_enc_path = os.path.join(MODEL_DIR, "fertilizer_soil_encoder.pkl")
-fertilizer_crop_enc_path = os.path.join(MODEL_DIR, "fertilizer_crop_encoder.pkl")
+fertilizer_model_path = os.path.join(MODEL_DIR, "Fertilizer_Recommendation_Model.pkl")
 
 try:
     with open(fertilizer_model_path, 'rb') as f:
-        fertilizer_model = pickle.load(f)
-    with open(fertilizer_soil_enc_path, 'rb') as f:
-        fertilizer_soil_enc = pickle.load(f)
-    with open(fertilizer_crop_enc_path, 'rb') as f:
-        fertilizer_crop_enc = pickle.load(f)
+        fert_dict = pickle.load(f)
+        fertilizer_model = fert_dict['model']
+        fertilizer_label_encoder = fert_dict['label_encoder']
+    fertilizer_soil_enc = "not_needed" # Mock variables to bypass null checks
+    fertilizer_crop_enc = "not_needed"
 except Exception as e:
     print(f"Warning: Failed to load Fertilizer Model: {e}. Will run in MOCK mode.")
     fertilizer_model = None
@@ -471,6 +469,10 @@ async def predict_price(req: PriceRequest):
                 
             encoded_input.append(target_month) # month feature
             
+            # Add newly engineered season feature
+            season = (target_month % 12 + 3) // 3
+            encoded_input.append(season)
+            
             # Predict (Model is natively trained to predict ₹/Quintal)
             pred_quintal = float(price_model.predict([encoded_input])[0])
             results.append({"month": month_label, "price": round(pred_quintal, 2)})
@@ -585,7 +587,7 @@ async def predict_crop(req: CropRequest):
                 "timestamp": datetime.now().isoformat()
             }
         
-        feature_names = ['nitrogen', 'phosphorus', 'potassium', 'temperature', 'humidity', 'ph', 'rainfall']
+        feature_names = ['Nitrogen', 'Phosphorus', 'Potassium', 'Temperature', 'Humidity', 'pH', 'Rainfall']
         features = np.array([[req.nitrogen, req.phosphorus, req.potassium, 
                               req.temperature, req.humidity, req.ph, req.rainfall]])
 
@@ -596,16 +598,14 @@ async def predict_crop(req: CropRequest):
         le = crop_ensemble.get('label_encoder', None)
 
         if is_sklearn_stack:
-            scaler = crop_ensemble['scaler']
             clf = crop_ensemble['stacking_clf']
-            features_scaled = scaler.transform(features)
             
-            # Get probabilities for all classes
-            probs = clf.predict_proba(features_scaled)[0]
+            # Get probabilities for all classes directly (scaler removed from ensemble)
+            probs = clf.predict_proba(features)[0]
             top_indices = np.argsort(probs)[-3:][::-1]
             
             for idx in top_indices:
-                crop_name = le.inverse_transform([idx])[0]
+                crop_name = str(le.inverse_transform([idx])[0]).title()
                 top_recommendations.append({
                     "crop": crop_name,
                     "confidence": float(probs[idx])
@@ -666,22 +666,31 @@ async def predict_fertilizer(req: FertilizerRequest):
         assert fertilizer_crop_enc is not None
         assert fertilizer_model is not None
         
-        # Encode categorical inputs
-        try:
-            soil_encoded = fertilizer_soil_enc.transform([req.soil_type])[0]
-        except ValueError:
-            raise HTTPException(status_code=400, detail=f"Unrecognized soil type: {req.soil_type}")
-            
-        try:
-            crop_encoded = fertilizer_crop_enc.transform([req.crop_type])[0]
-        except ValueError:
-            raise HTTPException(status_code=400, detail=f"Unrecognized crop type: {req.crop_type}")
-            
+        # The new pipeline model handles encoding internally, but requires a pandas DataFrame with specific column names
+        import pandas as pd
+        input_data = pd.DataFrame([{
+            'Temparature': req.temperature,
+            'Humidity': req.humidity,
+            'Moisture': req.moisture,
+            'Soil_Type': req.soil_type,
+            'Crop_Type': req.crop_type,
+            'Nitrogen': req.nitrogen,
+            'Potassium': req.potassium,
+            'Phosphorous': req.phosphorus
+        }])
+        
+        # Calculate engineered features required by the new fertilizer model
+        input_data['NPK_sum'] = input_data['Nitrogen'] + input_data['Potassium'] + input_data['Phosphorous']
+        input_data['NP_ratio'] = input_data['Nitrogen'] / (input_data['Phosphorous'] + 1)
+        input_data['PK_ratio'] = input_data['Phosphorous'] / (input_data['Potassium'] + 1)
+        input_data['temp_humidity'] = input_data['Temparature'] * input_data['Humidity']
+        
         feature_names = ['temperature', 'humidity', 'moisture', 'soil_type', 'crop_type', 'nitrogen', 'potassium', 'phosphorus']
         features = np.array([[req.temperature, req.humidity, req.moisture, 
-                             soil_encoded, crop_encoded, req.nitrogen, req.potassium, req.phosphorus]])
-        prediction = fertilizer_model.predict(features)
-        recommended = str(prediction[0])
+                             req.soil_type, req.crop_type, req.nitrogen, req.potassium, req.phosphorus]])
+                             
+        pred_num = fertilizer_model.predict(input_data)[0]
+        recommended = str(fertilizer_label_encoder.inverse_transform([pred_num])[0])
         insights, importances = get_fertilizer_insights(recommended, features, feature_names, fertilizer_model)
         
         res = {
