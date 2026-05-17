@@ -78,6 +78,7 @@ except Exception as e:
 try:
     if TF_AVAILABLE:
         disease_model = tf.keras.models.load_model(keras_model_path)
+        print(f"Disease model loaded successfully from {keras_model_path}")
     else:
         disease_model = None
 except Exception as e:
@@ -117,6 +118,87 @@ DISEASE_CLASSES = [
     'Tomato___Target_Spot', 'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 'Tomato___Tomato_mosaic_virus',
     'Tomato___healthy'
 ]
+
+DISEASE_CONFIDENCE_THRESHOLD = 0.80
+DISEASE_TOP2_MARGIN_THRESHOLD = 0.20
+DISEASE_ENTROPY_THRESHOLD = 2.00
+
+def preprocess_disease_image(contents: bytes):
+    image = Image.open(BytesIO(contents)).convert("RGB")
+    image = image.resize((128, 128))
+    input_arr = tf.keras.preprocessing.image.img_to_array(image)
+    return np.expand_dims(input_arr, axis=0)
+
+def normalize_disease_probabilities(predictions):
+    probs = np.asarray(predictions[0], dtype=np.float32)
+    if probs.shape[0] != len(DISEASE_CLASSES):
+        raise ValueError(
+            f"Disease model output size {probs.shape[0]} does not match "
+            f"class mapping size {len(DISEASE_CLASSES)}"
+        )
+
+    already_probabilities = (
+        np.isclose(float(probs.sum()), 1.0, atol=1e-3)
+        and np.all(probs >= 0.0)
+        and np.all(probs <= 1.0)
+    )
+    if not already_probabilities:
+        probs = tf.nn.softmax(probs).numpy()
+    return probs
+
+def build_uncertain_disease_response(reason: str, probs):
+    top_indices = np.argsort(probs)[-3:][::-1]
+    return {
+        "status": "uncertain",
+        "disease_class": "Uncertain",
+        "confidence": float(probs[top_indices[0]]),
+        "reason": reason,
+        "top_predictions": [
+            {
+                "disease_class": DISEASE_CLASSES[idx],
+                "confidence": float(probs[idx])
+            }
+            for idx in top_indices
+        ],
+        "suggestions": [
+            "Upload a clear, close-up photo of a single plant leaf.",
+            "Avoid screenshots, logos, animals, landscapes, and unrelated graphics.",
+            "Make sure the leaf fills most of the image and is well lit."
+        ]
+    }
+
+def is_plant_image(image_bytes: bytes, threshold_percentage=0.20) -> bool:
+    """
+    Lightweight HSV color heuristic that checks whether an image contains
+    enough green/yellow/brown pixels to plausibly be a plant leaf.
+    Acts as a pre-filter ("bouncer") to reject obviously non-plant images
+    (screenshots, tech stacks, faces, etc.) before they reach the heavy CNN,
+    preventing the softmax overconfidence / open-set recognition failure.
+    """
+    img = Image.open(BytesIO(image_bytes)).convert('HSV')
+    hsv_arr = np.array(img)
+
+    h = hsv_arr[:, :, 0]  # Hue
+    s = hsv_arr[:, :, 1]  # Saturation
+    v = hsv_arr[:, :, 2]  # Value (brightness)
+
+    # PIL HSV: H is 0-255.  Green/Yellow/Brown hues roughly map to 20-110.
+    # We also require minimum saturation & brightness so pure black/white/gray
+    # backgrounds are ignored.
+    # Tighter plant color thresholds:
+    # H: 30-100 isolates green and strong yellow-green (excludes brown/orange skin tones)
+    # S, V: >= 50 removes pale/gray/dark background noise
+    is_plant_color = (
+        (h >= 30) & (h <= 100) &   
+        (s >= 50) &                
+        (v >= 50)                  
+    )
+
+    plant_pixel_count = int(np.sum(is_plant_color))
+    total_pixels = hsv_arr.shape[0] * hsv_arr.shape[1]
+    plant_ratio = plant_pixel_count / total_pixels
+
+    return plant_ratio >= threshold_percentage
 
 # Disease Treatments
 DISEASE_TREATMENTS = {
@@ -622,34 +704,58 @@ async def predict_disease(file: UploadFile = File(...)):
         
     try:
         contents = await file.read()
+
+        # ---- OOD Pre-filter: reject images that are clearly not plants ----
+        if not is_plant_image(contents):
+            return {
+                "status": "rejected",
+                "disease_class": "Not a Plant",
+                "confidence": 0.0,
+                "top2_margin": 0.0,
+                "entropy": 0.0,
+                "reason": "Image does not contain enough plant foliage.",
+                "suggestions": [
+                    "Upload a clear, close-up photo of a single plant leaf.",
+                    "Avoid screenshots, logos, dark images, or non-plant objects.",
+                    "Make sure the leaf fills most of the image and is well lit."
+                ]
+            }
+        # -------------------------------------------------------------------
         
         if disease_model is None or not TF_AVAILABLE:
-            import hashlib
-            # Deterministic mock based on stable MD5 hash of image bytes
-            file_hash = int(hashlib.md5(contents).hexdigest(), 16)
-            random.seed(file_hash)
-            chosen_disease = random.choice(DISEASE_CLASSES)
-            chosen_conf = random.uniform(0.7, 0.99)
-            random.seed() # reset the global seed
-            return {
-                "disease_class": chosen_disease, 
-                "confidence": chosen_conf,
-                "suggestions": DISEASE_TREATMENTS.get(chosen_disease, [])
-            }
+            raise HTTPException(
+                status_code=503,
+                detail="Disease model unavailable. TensorFlow or model loading failed."
+            )
 
-        image = tf.keras.preprocessing.image.load_img(BytesIO(contents), target_size=(128, 128))
-        
-        input_arr = tf.keras.preprocessing.image.img_to_array(image)
-        input_arr = np.array([input_arr])  # Create batch
+        input_arr = preprocess_disease_image(contents)
         
         # Explicitly assert disease_model is not None to satisfy IDE type checkers
         assert disease_model is not None
-        predictions = disease_model.predict(input_arr)
-        result_index = np.argmax(predictions)
+        predictions = disease_model.predict(input_arr, verbose=0)
+        probs = normalize_disease_probabilities(predictions)
+        top_indices = np.argsort(probs)[-2:][::-1]
+        result_index = int(top_indices[0])
+        confidence = float(probs[result_index])
+        second_confidence = float(probs[int(top_indices[1])])
+        top2_margin = confidence - second_confidence
+        entropy = float(-np.sum(probs * np.log(probs + 1e-8)))
+
+        if confidence < DISEASE_CONFIDENCE_THRESHOLD:
+            return build_uncertain_disease_response("Low model confidence", probs)
+
+        if top2_margin < DISEASE_TOP2_MARGIN_THRESHOLD:
+            return build_uncertain_disease_response("Prediction is too close to another disease class", probs)
+
+        if entropy > DISEASE_ENTROPY_THRESHOLD:
+            return build_uncertain_disease_response("Prediction distribution is too uncertain", probs)
         
         res = {
+            "status": "diagnosed",
             "disease_class": DISEASE_CLASSES[result_index], 
-            "confidence": float(predictions[0][result_index]),
+            "confidence": confidence,
+            "top2_margin": top2_margin,
+            "entropy": entropy,
             "suggestions": DISEASE_TREATMENTS.get(DISEASE_CLASSES[result_index], [])
         }
         await log_recommendation("Disease", res["disease_class"], {"filename": file.filename})
