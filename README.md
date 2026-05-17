@@ -78,4 +78,4 @@ For a deep-dive into the platform's architecture and the detailed performance me
 👉 **[Read the Full Project Documentation](PROJECT_DOCUMENTATION.md)**
 
 ---
-*Built with ❤️ for the future of agriculture.*
+

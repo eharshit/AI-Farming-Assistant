@@ -27,7 +27,8 @@ features = ['commodity_name', 'state', 'district', 'market', 'month']
 target = 'modal_price'
 
 X = df[features].copy()
-y = df[target]
+# Convert target from INR/Kg to INR/Quintal natively during training
+y = df[target] * 100
 
 print("Encoding categorical variables...")
 encoders = {}

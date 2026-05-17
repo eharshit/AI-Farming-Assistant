@@ -471,9 +471,9 @@ async def predict_price(req: PriceRequest):
                 
             encoded_input.append(target_month) # month feature
             
-            # Predict
-            pred = price_model.predict([encoded_input])[0]
-            results.append({"month": month_label, "price": round(float(pred), 2)})
+            # Predict (Model is natively trained to predict ₹/Quintal)
+            pred_quintal = float(price_model.predict([encoded_input])[0])
+            results.append({"month": month_label, "price": round(pred_quintal, 2)})
             
         except Exception as e:
             # Fallback if specific prediction fails
