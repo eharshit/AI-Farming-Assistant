@@ -152,7 +152,7 @@ const FertilizerRecommendation = () => {
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         <label style={{ fontWeight: '600' }}>Soil Type</label>
-                        <select name="soil_type" value={formData.soil_type} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc', backgroundColor: 'white' }}>
+                        <select name="soil_type" value={formData.soil_type} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc', backgroundColor: 'var(--bg-white)', color: 'var(--text-dark)' }}>
                             {availableSoilTypes.map(soil => (
                                 <option key={soil} value={soil}>{soil}</option>
                             ))}
@@ -161,7 +161,7 @@ const FertilizerRecommendation = () => {
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                         <label style={{ fontWeight: '600' }}>Crop Type</label>
-                        <select name="crop_type" value={formData.crop_type} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc', backgroundColor: 'white' }}>
+                        <select name="crop_type" value={formData.crop_type} onChange={handleChange} required style={{ padding: '10px', borderRadius: '8px', border: '1px solid #ccc', backgroundColor: 'var(--bg-white)', color: 'var(--text-dark)' }}>
                             {availableCropTypes.map(crop => (
                                 <option key={crop} value={crop}>{crop}</option>
                             ))}
@@ -215,7 +215,7 @@ const FertilizerRecommendation = () => {
                             <button onClick={() => setResult(null)} style={{ marginTop: '10px', background: 'none', border: 'none', color: '#666', cursor: 'pointer', textDecoration: 'underline' }}>New Prediction</button>
                         </div>
 
-                        <div className="glass-panel" style={{ padding: '30px', background: 'white' }}>
+                        <div className="glass-panel" style={{ padding: '30px' }}>
                             <h3 style={{ borderBottom: '2px solid #eee', paddingBottom: '10px', marginBottom: '20px' }}>Nutrient Analysis</h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
                                 {analysis && analysis.length > 0 ? analysis.map((insight, idx) => (

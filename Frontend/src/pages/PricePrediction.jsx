@@ -89,7 +89,7 @@ const PricePrediction = () => {
         if (active && payload && payload.length) {
             return (
                 <div style={{
-                    background: 'rgba(255,255,255,0.95)',
+                    background: 'var(--bg-white)',
                     backdropFilter: 'blur(10px)',
                     border: '1px solid rgba(46,125,50,0.2)',
                     borderRadius: '12px',
@@ -227,7 +227,7 @@ const PricePrediction = () => {
                             </div>
 
                             {/* Chart */}
-                            <div style={{ height: '380px', width: '100%', background: 'white', padding: '24px 20px 16px', borderRadius: '14px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)', marginBottom: '24px' }}>
+                            <div style={{ height: '380px', width: '100%', background: 'var(--bg-white)', padding: '24px 20px 16px', borderRadius: '14px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)', marginBottom: '24px' }}>
                                 <h4 style={{ margin: '0 0 16px', fontSize: '0.85rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>Forecast Trend</h4>
                                 <ResponsiveContainer width="100%" height="90%">
                                     <AreaChart data={result.predictions} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -255,7 +255,7 @@ const PricePrediction = () => {
                             </div>
 
                             {/* Data Table */}
-                            <div style={{ background: 'white', borderRadius: '14px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+                            <div style={{ background: 'var(--bg-white)', borderRadius: '14px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
                                 <h4 style={{ margin: 0, padding: '18px 24px 12px', fontSize: '0.85rem', color: '#888', textTransform: 'uppercase', letterSpacing: '1px' }}>Monthly Breakdown</h4>
                                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                                     <thead>

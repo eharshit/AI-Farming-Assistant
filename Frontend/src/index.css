@@ -59,6 +59,23 @@ ul {
   list-style: none;
 }
 
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+select,
+textarea {
+  background-color: var(--bg-white);
+  color: var(--text-dark);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+}
+
 h1,
 h2,
 h3,

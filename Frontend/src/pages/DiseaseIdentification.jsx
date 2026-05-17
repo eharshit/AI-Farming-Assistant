@@ -55,7 +55,7 @@ const DiseaseIdentification = () => {
 
                     <div style={{
                         width: '100%', padding: '40px', border: '2px dashed #ccc',
-                        borderRadius: '12px', textAlign: 'center', backgroundColor: 'rgba(255,255,255,0.5)',
+                        borderRadius: '12px', textAlign: 'center', backgroundColor: 'var(--bg-white)',
                         cursor: 'pointer', position: 'relative'
                     }}>
                         <input
@@ -107,7 +107,7 @@ const DiseaseIdentification = () => {
                         )}
 
                         {result.top_predictions && result.top_predictions.length > 0 && (
-                            <div style={{ marginTop: '20px', textAlign: 'left', background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
+                            <div style={{ marginTop: '20px', textAlign: 'left', background: 'var(--bg-white)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(128,128,128,0.2)' }}>
                                 <h4 style={{ color: 'var(--primary-dark)', marginBottom: '12px' }}>Closest Matches</h4>
                                 {result.top_predictions.map((prediction, idx) => (
                                     <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', marginBottom: '8px', color: 'var(--text-dark)' }}>
@@ -119,7 +119,7 @@ const DiseaseIdentification = () => {
                         )}
                         
                         {result.suggestions && result.suggestions.length > 0 && (
-                            <div style={{ marginTop: '25px', textAlign: 'left', background: 'white', padding: '25px', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
+                            <div style={{ marginTop: '25px', textAlign: 'left', background: 'var(--bg-white)', padding: '25px', borderRadius: '12px', border: '1px solid rgba(128,128,128,0.2)' }}>
                                 <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--primary-dark)', marginBottom: '15px', fontSize: '1.2rem' }}>
                                     {result.disease_class.includes('healthy') ? <Leaf size={20} /> : <CheckCircle size={20} />}
                                     {result.status === 'uncertain' ? 'Upload Guidance' : result.disease_class.includes('healthy') ? 'Maintenance Plan' : 'Actionable Treatment Plan'}

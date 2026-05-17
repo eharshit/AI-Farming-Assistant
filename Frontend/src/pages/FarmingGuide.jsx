@@ -181,7 +181,7 @@ const FarmingGuide = () => {
                     border-radius: 8px;
                     text-align: left;
                     font-size: 1rem;
-                    color: var(--text-color);
+                    color: var(--text-dark);
                     cursor: pointer;
                     transition: all 0.2s ease;
                 }
@@ -211,13 +211,13 @@ const FarmingGuide = () => {
                     margin-top: 30px;
                     margin-bottom: 15px;
                     font-size: 1.3rem;
-                    color: #333;
+                    color: var(--text-dark);
                 }
 
                 .guide-content-section p {
                     font-size: 1.1rem;
                     line-height: 1.6;
-                    color: #555;
+                    color: var(--text-light);
                 }
 
                 .guide-list {
@@ -235,7 +235,7 @@ const FarmingGuide = () => {
                     gap: 12px;
                     font-size: 1.05rem;
                     line-height: 1.5;
-                    color: #444;
+                    color: var(--text-dark);
                 }
 
                 .guide-list li svg {

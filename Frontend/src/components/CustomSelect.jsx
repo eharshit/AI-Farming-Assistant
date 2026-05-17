@@ -104,9 +104,9 @@ const CustomSelect = ({ id, name, value, options, onChange, placeholder, require
                     width: '100%',
                     padding: '12px 16px',
                     borderRadius: '10px',
-                    border: isOpen ? '1px solid var(--primary-color)' : '1px solid #ddd',
+                    border: isOpen ? '1px solid var(--primary-color)' : '1px solid var(--border-color, #ddd)',
                     fontSize: '1rem',
-                    backgroundColor: 'white',
+                    backgroundColor: 'var(--bg-white)',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -116,7 +116,7 @@ const CustomSelect = ({ id, name, value, options, onChange, placeholder, require
                     transition: 'border-color 0.3s, box-shadow 0.3s',
                     outline: 'none',
                     boxShadow: isOpen ? '0 0 0 3px rgba(46,125,50,0.1)' : 'none',
-                    color: value ? '#1a1a1a' : '#999',
+                    color: value ? 'var(--text-dark)' : 'var(--text-light)',
                 }}
             >
                 <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
@@ -141,7 +141,7 @@ const CustomSelect = ({ id, name, value, options, onChange, placeholder, require
                     left: 0,
                     right: 0,
                     zIndex: 50,
-                    background: 'rgba(255,255,255,0.92)',
+                    background: 'var(--bg-white)',
                     backdropFilter: 'blur(16px)',
                     WebkitBackdropFilter: 'blur(16px)',
                     borderRadius: '12px',
@@ -175,7 +175,7 @@ const CustomSelect = ({ id, name, value, options, onChange, placeholder, require
                                         background: 'transparent',
                                         fontSize: '0.88rem',
                                         width: '100%',
-                                        color: '#333',
+                                        color: 'var(--text-dark)',
                                     }}
                                 />
                             </div>
@@ -235,7 +235,7 @@ const CustomSelect = ({ id, name, value, options, onChange, placeholder, require
                                             : isHighlighted
                                                 ? 'rgba(0,0,0,0.04)'
                                                 : 'transparent',
-                                        color: isSelected ? 'var(--primary-dark)' : '#333',
+                                        color: isSelected ? 'var(--primary-dark)' : 'var(--text-dark)',
                                         fontWeight: isSelected ? 600 : 400,
                                         display: 'flex',
                                         alignItems: 'center',
